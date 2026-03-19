@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+}
+
+h1,
+h2,
+.navbar-brand {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+.hero {
+    min-height: 90vh;
+}
+
+.intro {
+    min-height: 90vh;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10%;
+}
+
+.intro-text {
+    max-width: 500px;
+}
+
+.footer {
+    min-height: 40vh;
+    background-color: #333;
+    color: white;
+    padding: 40px 10%;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.footer-col {
+    max-width: 300px;
+}
+
+.footer-col h3 {
+    margin-bottom: 15px;
+}
+
+.footer-col a {
+    display: block;
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 8px;
+}
+
+.footer-col a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    margin-top: 30px;
+    border-top: 1px solid #555;
+    padding-top: 15px;
+    text-align: center;
+}
+
+
+.input-group-custom {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid #ccc;
+    margin: 25px 0;
+}
+
+.input-group-custom label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #333;
+    pointer-events: none;
+    transition: all .3s ease;
+}
+
+.input-group-custom input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 0 35px 0 5px;
+    color: #333;
+}
+
+.input-group-custom .icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    color: #333;
+    transition: .3s;
+}
+
+.input-group-custom input:focus~label,
+.input-group-custom input:valid~label {
+    top: -5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #198754;
+    /* Siker zöld szín */
+}
+
+.input-group-custom .bar {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #198754;
+    transition: .3s;
+}
+
+.input-group-custom input:focus~.bar,
+.input-group-custom input:valid~.bar {
+    width: 100%;
+}
+
+/* Ikon színének változása */
+.input-group-custom input:focus~.icon,
+.input-group-custom input:valid~.icon {
+    color: #198754;
+}
+
+/* Modal átmenet finomítás */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+}
+
+
+.image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    height: 600px;
+}

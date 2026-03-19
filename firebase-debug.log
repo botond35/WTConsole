@@ -1,0 +1,78 @@
+[debug] [2026-03-19T08:28:37.993Z] ----------------------------------------------------------------------
+[debug] [2026-03-19T08:28:38.011Z] Command:       /Users/botond/.nvm/versions/node/v24.13.0/bin/node /Users/botond/.nvm/versions/node/v24.13.0/bin/firebase init
+[debug] [2026-03-19T08:28:38.011Z] CLI Version:   15.7.0
+[debug] [2026-03-19T08:28:38.011Z] Platform:      darwin
+[debug] [2026-03-19T08:28:38.011Z] Node Version:  v24.13.0
+[debug] [2026-03-19T08:28:38.012Z] Time:          Thu Mar 19 2026 09:28:38 GMT+0100 (Central European Standard Time)
+[debug] [2026-03-19T08:28:38.012Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-19T08:28:38.014Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/botond/Documents/mystuff/WTConsole
+
+[debug] [2026-03-19T08:28:41.882Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-19T08:28:41.882Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2026-03-19T08:29:21.366Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-19T08:29:21.369Z] > authorizing via signed-in user (kissbotondzalan@gmail.com)
+[debug] [2026-03-19T08:29:21.370Z] Checked if tokens are valid: false, expires at: 1773428456020
+[debug] [2026-03-19T08:29:21.370Z] Checked if tokens are valid: false, expires at: 1773428456020
+[debug] [2026-03-19T08:29:21.370Z] > refreshing access token with scopes: []
+[debug] [2026-03-19T08:29:21.378Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-19T08:29:21.378Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-19T08:29:21.624Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-19T08:29:21.624Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-19T08:29:21.638Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/summer-proj-5dd50 [none]
+[debug] [2026-03-19T08:29:22.174Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/summer-proj-5dd50 200
+[debug] [2026-03-19T08:29:22.175Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/summer-proj-5dd50 {"projectId":"summer-proj-5dd50","projectNumber":"635484661228","displayName":"summer-proj","name":"projects/summer-proj-5dd50","resources":{"hostingSite":"summer-proj-5dd50"},"state":"ACTIVE","etag":"1_41c6812c-842e-407f-a2f5-cb7999096c32"}
+[info] i  Using project summer-proj-5dd50 (summer-proj) . 
+[info] 
+=== Dataconnect Setup
+[info] i  dataconnect: ensuring required API firebasedataconnect.googleapis.com is enabled... 
+[debug] [2026-03-19T08:29:22.194Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:22.194Z] Checked if tokens are valid: true, expires at: 1773912560624
+[info] i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled... 
+[debug] [2026-03-19T08:29:22.194Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:22.194Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:22.195Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com [none]
+[debug] [2026-03-19T08:29:22.195Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com  x-goog-user-project=summer-proj-5dd50
+[debug] [2026-03-19T08:29:22.196Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/sqladmin.googleapis.com [none]
+[debug] [2026-03-19T08:29:22.196Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/sqladmin.googleapis.com  x-goog-user-project=summer-proj-5dd50
+[debug] [2026-03-19T08:29:23.712Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/sqladmin.googleapis.com 200
+[debug] [2026-03-19T08:29:23.712Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/sqladmin.googleapis.com [omitted]
+[info] ✔  dataconnect: required API sqladmin.googleapis.com is enabled 
+[debug] [2026-03-19T08:29:23.726Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com 200
+[debug] [2026-03-19T08:29:23.727Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com [omitted]
+[warn] ⚠  dataconnect: missing required API firebasedataconnect.googleapis.com. Enabling now... 
+[debug] [2026-03-19T08:29:23.732Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:23.732Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:23.732Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com:enable [none]
+[debug] [2026-03-19T08:29:23.732Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com:enable  x-goog-user-project=summer-proj-5dd50
+[debug] [2026-03-19T08:29:25.060Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com:enable 200
+[debug] [2026-03-19T08:29:25.060Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/firebasedataconnect.googleapis.com:enable [omitted]
+[debug] [2026-03-19T08:29:35.073Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:35.073Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:35.073Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/summer-proj-5dd50/locations/-/services [none]
+[debug] [2026-03-19T08:29:36.610Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/summer-proj-5dd50/locations/-/services 200
+[debug] [2026-03-19T08:29:36.610Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/summer-proj-5dd50/locations/-/services {}
+[info] i  : ensuring required API cloudaicompanion.googleapis.com is enabled... 
+[debug] [2026-03-19T08:29:42.657Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:42.657Z] Checked if tokens are valid: true, expires at: 1773912560624
+[debug] [2026-03-19T08:29:42.658Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/cloudaicompanion.googleapis.com [none]
+[debug] [2026-03-19T08:29:42.658Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/cloudaicompanion.googleapis.com  x-goog-user-project=summer-proj-5dd50
+[debug] [2026-03-19T08:29:43.740Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/cloudaicompanion.googleapis.com 200
+[debug] [2026-03-19T08:29:43.740Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/summer-proj-5dd50/services/cloudaicompanion.googleapis.com [omitted]
+[info] ✔  : required API cloudaicompanion.googleapis.com is enabled 
