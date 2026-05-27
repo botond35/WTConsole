@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "firebase": "^12.10.0"
+  },
+  "devDependencies": {
+    "open-cli": "^9.0.0"
   }
 }
