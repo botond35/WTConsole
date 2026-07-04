@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment</title>
+  <link rel="stylesheet" href="../css/booking.css">
+</head>
+<body>
+
+  <header class="bk-header">
+    <div class="bk-header-inner">
+      <div class="bk-logo"><span class="material-symbols-rounded" style="font-size:26px;">pets</span></div>
+      <div>
+        <div class="bk-biz-name" id="businessName">Loading…</div>
+        <div class="bk-biz-desc" id="businessDesc">Veterinary & Dog Walking Services</div>
+      </div>
+      <div class="bk-contact">
+        <a href="tel:" id="businessPhone"></a>
+        <a href="mailto:" id="businessEmail"></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="bk-main">
+
+    <div class="step-progress" id="stepProgress">
+      <div class="step-indicator active" data-step="1">
+        <div class="step-bubble">1</div>
+        <div class="step-text">Service</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-indicator todo" data-step="2">
+        <div class="step-bubble">2</div>
+        <div class="step-text">Date & Time</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-indicator todo" data-step="3">
+        <div class="step-bubble">3</div>
+        <div class="step-text">Your Details</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-indicator todo" data-step="4">
+        <div class="step-bubble">4</div>
+        <div class="step-text">Confirm</div>
+      </div>
+    </div>
+
+    <!-- Booking Flow -->
+    <div id="bookingFlow">
+
+      <!-- ── Step 1: Choose Service ── -->
+      <div class="step-pane active" id="pane1">
+        <h2 class="step-title">Choose a Service</h2>
+        <p class="step-subtitle">Select the service you'd like to book</p>
+        <div id="step1Error" class="step-error"></div>
+        <div class="service-grid" id="serviceGrid">
+          <div style="grid-column:1/-1;padding:32px;text-align:center;color:#9ca3af;font-size:14px;">Loading services…</div>
+        </div>
+        <div class="step-actions" style="justify-content:flex-end;">
+          <button class="btn-next" onclick="goStep(2)">Next: Choose Date →</button>
+        </div>
+      </div>
+      <div class="step-pane" id="pane2">
+        <h2 class="step-title">Pick a Date & Time</h2>
+        <p class="step-subtitle">Choose when you'd like to come in</p>
+        <div id="step2Error" class="step-error"></div>
+        <div class="datetime-layout">
+          <div class="dt-section">
+            <label>Date</label>
+            <input type="date" id="bookDate" class="date-input">
+          </div>
+          <div class="dt-section">
+            <label><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;margin-right:6px;">schedule</span>Available Slots</label>
+            <div class="time-grid" id="timeSlots">
+              <div style="grid-column:1/-1;color:#9ca3af;font-size:13px;padding:8px 0;">Select a date first</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Next: Your Details →</button>
+        </div>
+      </div>
+
+      <div class="step-pane" id="pane3">
+        <h2 class="step-title">Your Details</h2>
+        <p class="step-subtitle">Tell us about you and your pet</p>
+        <div id="step3Error" class="step-error"></div>
+
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:12px;">Owner Information</div>
+          <div class="contact-grid">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="req">*</span></label>
+              <input class="form-input" id="ownerName" placeholder="e.g. Anna Kiss" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone <span class="req">*</span></label>
+              <input class="form-input" id="phone" type="tel" placeholder="+36 20 000 0000" autocomplete="tel">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Email</label>
+              <input class="form-input" id="email" type="email" placeholder="anna@email.com" autocomplete="email">
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#9ca3af;margin-bottom:12px;">Pet Information</div>
+          <div class="contact-grid">
+            <div class="form-group">
+              <label class="form-label">Pet Name <span class="req">*</span></label>
+              <input class="form-input" id="petName" placeholder="e.g. Buddy">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Breed</label>
+              <input class="form-input" id="breed" placeholder="e.g. Golden Retriever">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Age (years)</label>
+              <input class="form-input" id="petAge" type="number" min="0" max="30" placeholder="e.g. 3">
+            </div>
+            <div class="form-group">
+              <!-- spacer -->
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Notes or special requests</label>
+              <textarea class="form-textarea" id="notes" placeholder="Allergies, medical conditions, anything we should know…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="goStep(4)">Review Booking →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 4: Confirm ── -->
+      <div class="step-pane" id="pane4">
+        <h2 class="step-title">Review & Confirm</h2>
+        <p class="step-subtitle">Check your booking details before confirming</p>
+
+        <div class="summary-box" id="bookingSummary"></div>
+
+        <div style="background:#f8f8f6;border:1px solid #e5e5e1;border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#6b7280;">
+          After confirming, the clinic will review your request and send a confirmation. Check your email for updates.
+        </div>
+
+        <button class="btn-book" id="submitBtn" onclick="submitBooking()">
+          ✓ Confirm Booking
+        </button>
+
+        <div style="text-align:center;margin-top:12px;">
+          <button class="btn-back" style="border:none;background:none;font-size:13px;color:#9ca3af;cursor:pointer;" onclick="goStep(3)">← Edit details</button>
+        </div>
+      </div>
+
+    </div><!-- /bookingFlow -->
+
+
+    <div id="confirmationScreen">
+      <div class="conf-card">
+        <div class="conf-icon"></div>
+        <h2 class="conf-heading">Booking Received!</h2>
+        <p class="conf-text">
+          Hi <strong class="conf-name"></strong>, your booking request has been submitted successfully.
+          We'll confirm your appointment shortly.
+        </p>
+        <div class="conf-detail">
+          <div class="conf-detail-row">
+            <span>Service</span>
+            <strong class="conf-service"></strong>
+          </div>
+          <div class="conf-detail-row">
+            <span>Date & Time</span>
+            <strong class="conf-datetime"></strong>
+          </div>
+        </div>
+        <p class="conf-note"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:middle;margin-right:6px;">mail</span>A confirmation will be sent to your email once the clinic approves your booking.</p>
+        <button onclick="window.location.reload()" style="margin-top:24px;padding:10px 24px;background:#111;color:white;border:none;border-radius:12px;font-size:14px;font-weight:500;cursor:pointer;">Book Another Appointment</button>
+      </div>
+    </div>
+
+  </div><!-- /bk-main -->
+
+  <footer class="bk-footer">
+    Powered by WT Console · Veterinary & Dog Walking Management
+  </footer>
+
+  <script type="module" src="../script/booking.js"></script>
+</body>
+</html>

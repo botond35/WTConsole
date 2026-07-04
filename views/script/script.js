@@ -1,9 +1,7 @@
 const signUpButton = document.getElementById("signUpButton");
 const signInButton = document.getElementById("signInButton");
-
-const signInForm = document.getElementById("signIn");
-const signUpForm = document.getElementById("signup");
-
+const signInForm   = document.getElementById("signIn");
+const signUpForm   = document.getElementById("signup");
 
 signUpButton.addEventListener("click", () => {
   signInForm.style.display = "none";

@@ -3,23 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Register & Login</title>
-  <link rel="icon" type="image/png" href="../../img/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="../../assets/img/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/favicon/apple-touch-icon.png" />
-  <link rel="manifest" href="../../assets/img/favicon/site.webmanifest" />
+  <title>WT Console – Sign In</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="../css/style.css"/>
   <script type="module" src="../script/auth.js"></script>
 </head>
-
 <body>
 
+  <!-- Sign Up -->
   <div class="container" id="signup" style="display:none;">
-
     <h1 class="form-title">Register</h1>
-
     <form>
       <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
 
@@ -36,6 +29,18 @@
       </div>
 
       <div class="input-group">
+        <i class="fas fa-paw"></i>
+        <input type="text" id="business" placeholder="Business / Clinic Name" required>
+        <label for="business">Business / Clinic Name</label>
+      </div>
+
+      <div class="input-group">
+        <i class="fas fa-phone"></i>
+        <input type="tel" id="phone" placeholder="Phone" required>
+        <label for="phone">Phone</label>
+      </div>
+
+      <div class="input-group">
         <i class="fas fa-envelope"></i>
         <input type="email" id="rEmail" placeholder="Email" required>
         <label for="rEmail">Email</label>
@@ -47,25 +52,19 @@
         <label for="rPassword">Password</label>
       </div>
 
-      <button type="button" class="btn" id="submitSignUp">
-        Sign Up
-      </button>
+      <button type="button" id="submitSignUp">Create Account</button>
     </form>
-
     <div class="links">
-      <p>Already Have Account?</p>
+      <p>Already have an account?</p>
       <a id="signInButton">Sign In</a>
     </div>
-
   </div>
 
-
+  <!-- Sign In -->
   <div class="container" id="signIn">
-
-    <h1 class="form-title">Sign In</h1>
+    <h1 class="form-title">WT Console</h1>
 
     <form>
-
       <div id="signInMessage" class="messageDiv" style="display:none;"></div>
 
       <div class="input-group">
@@ -79,36 +78,29 @@
         <input type="password" id="password" placeholder="Password" required>
         <label for="password">Password</label>
       </div>
-      
+
       <div class="or">or continue with</div>
+
       <div class="social-login">
-    
         <button type="button" class="social-btn google-btn" id="googleLogin">
           <i class="fa-brands fa-google"></i>
           <span>Continue with Google</span>
         </button>
-    
         <button type="button" class="social-btn apple-btn" id="appleLogin">
           <i class="fa-brands fa-apple"></i>
           <span>Continue with Apple</span>
         </button>
-    
-    </div>
+      </div>
 
-      <button type="button" class="btn" id="submitSignIn">
-        Sign In
-      </button>
-
+      <button type="button" id="submitSignIn">Sign In</button>
     </form>
 
     <div class="links">
-      <p>Don't have an account yet?</p>
-      <a id="signUpButton">Sign Up</a>
+      <p>Don't have an account?</p>
+      <a id="signUpButton">Create one</a>
     </div>
-
   </div>
 
   <script src="../script/script.js"></script>
-
 </body>
 </html>

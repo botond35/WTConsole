@@ -1,105 +1,173 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
+import { db } from "./firebase.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  collection, addDoc, getDocs, updateDoc, deleteDoc,
+  doc, query, where
+} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-// YOUR FIREBASE CONFIG
-const firebaseConfig = {
-  apiKey: "AIzaSyCG4aidBoanlgeIZSUuEeZHrzpvhdFu9_g",
-  authDomain: "wtconsole-6dce4.firebaseapp.com",
-  projectId: "wtconsole-6dce4",
-  storageBucket: "wtconsole-6dce4.firebasestorage.app",
-  messagingSenderId: "6358100299",
-  appId: "1:6358100299:web:f1a6b5c02eb687d887e0ce",
-  measurementId: "G-5D0K7GWKP9"
+let uid = null;
 
+const __wtRun = async (user) => {
+  try { await __wtMain(user); } catch (e) { console.error(e); }
+};
+document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
+if (window.currentUser?.uid) __wtRun(window.currentUser);
+const __wtMain = async (user) => {
+  uid = user.uid;
+  await loadPlans();
 };
 
-// INIT
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// GLOBAL FUNCTIONS
-window.openModal = function () {
+/* ── Modal ─────────────────────────────────────────── */
+window.openModal = function() {
   document.getElementById("planModal").classList.remove("hidden");
+  document.getElementById("planName").focus();
 };
 
-window.closeModal = function () {
+window.closeModal = function() {
   document.getElementById("planModal").classList.add("hidden");
+  document.getElementById("planName").value  = "";
+  document.getElementById("planDesc").value  = "";
+  document.getElementById("planPrice").value = "";
+  document.getElementById("planDuration").value = "";
+  document.getElementById("planCategory").value = "checkup";
 };
 
-// LOAD PLANS
+/* ── CRUD ───────────────────────────────────────────── */
 async function loadPlans() {
   const container = document.getElementById("plansContainer");
-  container.innerHTML = "";
+  container.innerHTML = `<div class="loading-pulse">Loading plans…</div>`;
 
-  const querySnapshot = await getDocs(collection(db, "plans"));
+  const snap = await getDocs(
+    query(collection(db, "plans"), where("userId", "==", uid))
+  );
 
-  querySnapshot.forEach((docSnap) => {
-    const plan = docSnap.data();
+  if (snap.empty) {
+    container.innerHTML = `
+      <div class="col-span-3 empty-plans">
+        <span class="material-symbols-rounded" style="font-size:40px;color:#d1d5db;">folder_open</span>
+        <p>No service plans yet.</p>
+        <p style="color:#9ca3af;font-size:13px;margin-top:4px;">Click "Add Plan" to create your first service.</p>
+      </div>`;
+    return;
+  }
 
-    const card = document.createElement("div");
-    card.className =
-      "bg-gray-50 border border-gray-100 rounded-2xl p-6";
-
-    card.innerHTML = `
-      <div class="flex items-start justify-between">
-        <div>
-          <h3 class="text-xl font-semibold">${plan.name}</h3>
-          <p class="text-gray-500 mt-2">${plan.desc}</p>
+  container.innerHTML = snap.docs.map(d => {
+    const p = d.data();
+    return `
+      <div class="plan-card">
+        <div class="plan-card-top">
+          <div>
+            <span class="plan-category">${categoryLabel(p.category)}</span>
+            <h3 class="plan-name">${p.name}</h3>
+            ${p.duration ? `<span class="plan-duration">⏱ ${p.duration}</span>` : ""}
+            <p class="plan-desc">${p.desc || "No description provided."}</p>
+          </div>
+          <button onclick="deletePlan('${d.id}')" class="plan-delete" title="Delete plan">
+            <span class="material-symbols-rounded">delete</span>
+          </button>
         </div>
-
-        <button
-          onclick="deletePlan('${docSnap.id}')"
-          class="text-red-500 hover:text-red-700"
-        >
-          <span class="material-symbols-rounded">delete</span>
-        </button>
-      </div>
-
-      <div class="mt-4 text-lg font-bold text-black flex justify-end">
-        ${plan.price ? plan.price + " ft" : "No price set"}
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
+        <div class="plan-price-row">
+          <span class="plan-price">${p.price ? Number(p.price).toLocaleString("hu-HU") + " Ft" : "Price on request"}</span>
+          <span class="plan-session">per session</span>
+        </div>
+      </div>`;
+  }).join("");
 }
 
-// ADD PLAN
-window.addPlan = async function () {
-  const name = document.getElementById("planName").value;
-  const desc = document.getElementById("planDesc").value;
-  const price = document.getElementById("planPrice").value;
+window.addPlan = async function() {
+  const name     = document.getElementById("planName").value.trim();
+  const desc     = document.getElementById("planDesc").value.trim();
+  const price    = document.getElementById("planPrice").value;
+  const duration = document.getElementById("planDuration").value.trim();
+  const category = document.getElementById("planCategory").value;
 
-  if (!name) return;
+  if (!name) { alert("Plan name is required."); return; }
 
-  await addDoc(collection(db, "plans"), {
-    name,
-    desc,
-    price
-  });
+  const btn = document.getElementById("addPlanBtn");
+  btn.disabled = true; btn.textContent = "Adding…";
 
-  document.getElementById("planName").value = "";
-  document.getElementById("planDesc").value = "";
-  document.getElementById("planPrice").value = "";
-
-  closeModal();
-
-  loadPlans();
+  try {
+    await addDoc(collection(db, "plans"), {
+      userId: uid,
+      name, desc, price: parseFloat(price) || null, duration, category
+    });
+    closeModal();
+    await loadPlans();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to add plan.");
+  } finally {
+    btn.disabled = false; btn.textContent = "Add Plan";
+  }
 };
 
-// DELETE PLAN
-window.deletePlan = async function (id) {
-  await deleteDoc(doc(db, "plans", id));
-  loadPlans();
+window.deletePlan = async function(id) {
+  if (!confirm("Delete this service plan?")) return;
+  try {
+    await deleteDoc(doc(db, "plans", id));
+    await loadPlans();
+  } catch (err) {
+    console.error(err);
+    alert("Could not delete plan.");
+  }
 };
 
-// INITIAL LOAD
-window.addEventListener("DOMContentLoaded", loadPlans);
+/* helpers */
+function categoryLabel(c) {
+  const map = {
+    checkup:  "Health",
+    grooming: "Grooming",
+    walking:  "Walking",
+    training: "Training",
+    surgery:  "Surgery",
+    dental:   "Dental",
+    vaccine:  "Vaccination",
+    other:    "Other"
+  };
+  return map[c] || "Other";
+}
+async function loadDashboard(uid) {
+  const safe = async (fn, fallback = []) => {
+    try { return await fn(); } catch (e) { console.error(e); return fallback; }
+  };
+
+  const [clients, bookings, invoices] = await Promise.all([
+    safe(async () => (await getDocs(query(collection(db, "clients"),  where("userId",     "==", uid))))
+      .docs.map(d => ({ id: d.id, ...d.data() }))),
+    safe(async () => (await getDocs(query(collection(db, "bookings"), where("businessId", "==", uid))))
+      .docs.map(d => ({ id: d.id, ...d.data() }))),
+    safe(async () => (await getDocs(query(collection(db, "invoices"), where("userId",     "==", uid))))
+      .docs.map(d => ({ id: d.id, ...d.data() }))),
+  ]);
+
+  const pendingInvoices = invoices.filter(i => i.status === "pending").length;
+  const totalRevenue    = invoices
+    .filter(i => i.status === "paid")
+    .reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
+
+  setEl("statClients",  clients.length);
+  setEl("statBookings", bookings.length);
+  setEl("statPending",  pendingInvoices);
+  setEl("statRevenue",  formatFt(totalRevenue));
+
+  const today    = todayStr();
+  const todayBk  = bookings.filter(b => b.date === today);
+  const upcoming = bookings
+    .filter(b => b.date && b.date > today && b.status !== "cancelled")
+    .sort((a, b) => (a.date || "").localeCompare(b.date || "") ||
+                    (a.time || "").localeCompare(b.time || ""))
+    .slice(0, 6);
+
+  renderTodayBookings(todayBk);
+  renderUpcomingBookings(upcoming);
+  renderRecentClients(clients.slice(-5).reverse());
+
+  revealApp();
+}
+
+function revealApp() {
+  const skel = document.getElementById("skeletonScreen");
+  const app  = document.getElementById("appView");
+  if (skel) skel.classList.add("fade-out");
+  if (app)  app.classList.add("fade-in");
+  setTimeout(() => { if (skel) skel.style.display = "none"; }, 250);
+}

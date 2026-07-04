@@ -1,183 +1,119 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-
+import { auth, db } from "./firebase.js";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
   OAuthProvider
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-
 import {
-  getFirestore,
-  doc
+  doc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCG4aidBoanlgeIZSUuEeZHrzpvhdFu9_g",
-  authDomain: "wtconsole-6dce4.firebaseapp.com",
-  projectId: "wtconsole-6dce4",
-  storageBucket: "wtconsole-6dce4.firebasestorage.app",
-  messagingSenderId: "6358100299",
-  appId: "1:6358100299:web:f1a6b5c02eb687d887e0ce",
-  measurementId: "G-5D0K7GWKP9"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-
 function showMessage(message, divId) {
-  const messageDiv = document.getElementById(divId);
-
-  messageDiv.style.display = "block";
-  messageDiv.innerHTML = message;
-
-  setTimeout(() => {
-    messageDiv.style.display = "none";
-  }, 5000);
+  const el = document.getElementById(divId);
+  if (!el) return;
+  el.style.display = "block";
+  el.innerHTML = message;
+  setTimeout(() => { el.style.display = "none"; }, 5000);
 }
 
+function cleanError(error) {
+  if (!error?.code) return error?.message || "An unknown error occurred.";
+  const map = {
+    "auth/invalid-credential":     "Invalid email or password.",
+    "auth/wrong-password":         "Invalid email or password.",
+    "auth/user-not-found":         "No account found with that email.",
+    "auth/email-already-in-use":   "This email is already registered.",
+    "auth/invalid-email":          "Invalid email address.",
+    "auth/weak-password":          "Password must be at least 6 characters.",
+    "auth/missing-password":       "Password is required.",
+    "auth/user-disabled":          "This account has been disabled.",
+    "auth/popup-closed-by-user":   "Sign-in popup was closed.",
+    "auth/network-request-failed": "Network error. Check your connection."
+  };
+  return map[error.code] || error.message.replace(/^Firebase:\s*/, "").replace(/\s*\(auth\/.*\)\.?$/, "");
+}
 
-
+/* ── Sign Up ──────────────────────────────────────── */
 const signUp = document.getElementById("submitSignUp");
-
 if (signUp) {
-
-  signUp.addEventListener("click", async (event) => {
-
-    event.preventDefault();
-
-    const email = document.getElementById("rEmail").value;
+  signUp.addEventListener("click", async () => {
+    const fName    = document.getElementById("fName").value.trim();
+    const lName    = document.getElementById("lName").value.trim();
+    const business = document.getElementById("business").value.trim();
+    const phone    = document.getElementById("phone").value.trim();
+    const email    = document.getElementById("rEmail").value.trim();
     const password = document.getElementById("rPassword").value;
-    const firstName = document.getElementById("fName").value;
-    const lastName = document.getElementById("lName").value;
+
+    if (!fName || !lName || !business || !phone || !email || !password) {
+      showMessage("Please fill in all fields.", "signUpMessage"); return;
+    }
 
     try {
-
-      const userCredential =
-        await createUserWithEmailAndPassword(auth, email, password);
-
-      const user = userCredential.user;
-
-      await setDoc(doc(db, "users", user.uid), {
-        email,
-        firstName,
-        lastName
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, "users", cred.user.uid), {
+        firstName: fName, lastName: lName,
+        Business: business, Phone: phone, email
       });
-
-      showMessage("Account Created Successfully", "signUpMessage");
-
-      window.location.href = "index.html";
-
-    } catch (error) {
-
-      if (error.code === "auth/email-already-in-use") {
-        showMessage("Email already exists", "signUpMessage");
-      } else {
-        showMessage(error.message, "signUpMessage");
-      }
+      localStorage.setItem("loggedInUserId", cred.user.uid);
+      showMessage("Registration successful! Redirecting…", "signUpMessage");
+      setTimeout(() => { window.location.href = "home.html"; }, 1000);
+    } catch (err) {
+      showMessage(cleanError(err), "signUpMessage");
     }
   });
 }
 
-
-
+/* ── Sign In ──────────────────────────────────────── */
 const signIn = document.getElementById("submitSignIn");
-
 if (signIn) {
-
-  signIn.addEventListener("click", async (event) => {
-
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
+  signIn.addEventListener("click", async () => {
+    const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
+    if (!email || !password) { showMessage("Enter your email and password.", "signInMessage"); return; }
 
     try {
-
-      const userCredential =
-        await signInWithEmailAndPassword(auth, email, password);
-
-      localStorage.setItem(
-        "loggedInUserId",
-        userCredential.user.uid
-      );
-
-      showMessage("Login successful", "signInMessage");
-
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      localStorage.setItem("loggedInUserId", cred.user.uid);
       window.location.href = "home.html";
-
-    } catch (error) {
-
-      if (error.code === "auth/invalid-credential") {
-        showMessage("Incorrect Email or Password", "signInMessage");
-      } else {
-        showMessage(error.message, "signInMessage");
-      }
+    } catch (err) {
+      showMessage(cleanError(err), "signInMessage");
     }
   });
 }
 
-
+/* ── Google ──────────────────────────────────────── */
 const googleBtn = document.getElementById("googleLogin");
-
 if (googleBtn) {
-
   googleBtn.addEventListener("click", async () => {
-
     try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      localStorage.setItem("loggedInUserId", result.user.uid);
 
-      const provider = new GoogleAuthProvider();
-
-      const result = await signInWithPopup(auth, provider);
-
-      localStorage.setItem(
-        "loggedInUserId",
-        result.user.uid
-      );
-
-      showMessage("Google Login Successful", "signInMessage");
-
+      // Create user doc if first login
+      const { getDoc, setDoc, doc: fsDoc } = await import("https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js");
+      const snap = await getDoc(fsDoc(db, "users", result.user.uid));
+      if (!snap.exists()) {
+        const names = (result.user.displayName || "Google User").split(" ");
+        await setDoc(fsDoc(db, "users", result.user.uid), {
+          firstName: names[0] || "", lastName: names.slice(1).join(" ") || "",
+          Business: "", Phone: "", email: result.user.email
+        });
+      }
       window.location.href = "home.html";
-
-    } catch (error) {
-
-      showMessage(error.message, "signInMessage");
-    }
+    } catch (err) { showMessage(cleanError(err), "signInMessage"); }
   });
 }
 
-
+/* ── Apple ───────────────────────────────────────── */
 const appleBtn = document.getElementById("appleLogin");
-
 if (appleBtn) {
-
   appleBtn.addEventListener("click", async () => {
-
     try {
-
-      const provider = new OAuthProvider("apple.com");
-
-      const result = await signInWithPopup(auth, provider);
-
-      localStorage.setItem(
-        "loggedInUserId",
-        result.user.uid
-      );
-
-      showMessage("Apple Login Successful", "signInMessage");
-
+      const result = await signInWithPopup(auth, new OAuthProvider("apple.com"));
+      localStorage.setItem("loggedInUserId", result.user.uid);
       window.location.href = "home.html";
-
-    } catch (error) {
-
-      showMessage(error.message, "signInMessage");
-    }
+    } catch (err) { showMessage(cleanError(err), "signInMessage"); }
   });
 }

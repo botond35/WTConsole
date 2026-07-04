@@ -139,6 +139,7 @@ input{
 
 input::placeholder{
     color:transparent;
+    background-color: transparent;
 }
 
 input:focus{
