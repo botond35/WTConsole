@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oldalszerkesztő – WT Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/editor.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="top-left">
+    <button class="back-btn" id="backBtn" title="Vissza a sablonokhoz">
+      <span class="material-symbols-rounded" style="font-size:18px;">arrow_back</span>
+    </button>
+    <div>
+      <div class="top-name" id="topName">Weboldal szerkesztése</div>
+      <div class="top-sub" id="topSub">—</div>
+    </div>
+  </div>
+
+  <div class="device-switch" role="group" aria-label="Előnézeti méret">
+    <button class="device-btn active" data-device="desktop" title="Asztali">
+      <span class="material-symbols-rounded">desktop_windows</span>
+    </button>
+    <button class="device-btn" data-device="tablet" title="Tablet">
+      <span class="material-symbols-rounded">tablet_mac</span>
+    </button>
+    <button class="device-btn" data-device="mobile" title="Telefon">
+      <span class="material-symbols-rounded">smartphone</span>
+    </button>
+  </div>
+
+  <div class="top-right">
+    <span class="save-state mono" id="saveState">Minden változás mentve</span>
+    <button class="btn btn-ghost" id="previewBtn">
+      <span class="material-symbols-rounded">open_in_new</span> Élő nézet
+    </button>
+    <button class="btn btn-dark" id="publishBtn">
+      <span class="material-symbols-rounded">bolt</span> Közzététel
+    </button>
+  </div>
+</div>
+
+<aside class="rail">
+  <div class="rail-section">
+    <div class="rail-label">Sablon</div>
+  </div>
+  <div class="template-mini" id="templateMini">
+    <div class="icon-chip" id="templateIcon"></div>
+    <div class="template-mini-text">
+      <div class="template-mini-name" id="templateName">—</div>
+      <div class="template-mini-hint">Sablon módosítása</div>
+    </div>
+  </div>
+
+  <div class="booking-status" id="bookingStatus">Foglalási link betöltése…</div>
+
+  <div class="rail-section" style="padding-top:0;">
+    <div class="rail-label">Blokkok</div>
+  </div>
+  <div style="padding:0 8px;" id="blockList"></div>
+
+  <div class="rail-divider"></div>
+
+  <div class="rail-section" style="padding-top:0;">
+    <div class="rail-label">Kiemelő szín</div>
+  </div>
+  <div class="swatch-row" id="swatchRow"></div>
+</aside>
+
+<main class="canvas-area">
+  <div class="device-frame" id="deviceFrame">
+    <div class="site" id="site"></div>
+  </div>
+</main>
+
+<!-- Image modal -->
+<div class="modal-overlay hidden" id="imgModal">
+  <div class="modal">
+    <h3>Kép cseréje</h3>
+    <p>Illessz be egy kép URL-t, vagy tölts fel egy fájlt a gépedről.</p>
+    <input type="text" id="imgUrlInput" placeholder="https://..." />
+    <div class="upload-row">
+      <label class="upload-btn">
+        Fájl feltöltése
+        <input type="file" accept="image/*" id="imgFileInput" style="display:none;">
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="imgCancel">Mégse</button>
+      <button class="btn btn-dark" id="imgApply">Alkalmaz</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="material-symbols-rounded">check_circle</span><span id="toastText">Elmentve</span></div>
+
+<script type="module" src="../script/editor.js"></script>
+</body>
+</html>

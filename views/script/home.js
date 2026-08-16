@@ -1,33 +1,15 @@
-import { db } from "./firebase.js";
-import {
-  collection, getDocs, query, where
-} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-
 /* ---------------------------
-   ENTRY POINTS
+   Dashboard – az adatokat már a homepage.js tölti be (1x, az app
+   megnyitásakor), ez a script csak MEGJELENÍTI azokat. Nincs saját
+   Firebase hívás, ezért oldalváltáskor azonnal renderel.
 ---------------------------- */
 
-let dashboardStarted = false;
-
-async function initDashboard(user) {
-  if (dashboardStarted) return;   // 🔒 véd a duplán lefutás ellen
-  dashboardStarted = true;
-
-  setGreeting(user);
-  await loadDashboard(user.uid);
-}
-
-document.addEventListener("userLoaded", ({ detail: user }) => {
-  initDashboard(user);
-});
-
-if (window.currentUser?.uid) {
-  initDashboard(window.currentUser);
-}
-
 /* ---------------------------
-   GREETING
+   GREETING (a bejelentkezett user profiljából, "userLoaded" esemény)
 ---------------------------- */
+
+document.addEventListener("userLoaded", ({ detail: user }) => setGreeting(user));
+if (window.currentUser?.uid) setGreeting(window.currentUser);
 
 function setGreeting(user) {
   const hour = new Date().getHours();
@@ -51,57 +33,13 @@ function setGreeting(user) {
 }
 
 /* ---------------------------
-   DASHBOARD LOADER
+   DASHBOARD RENDER (a cache-elt adatokból, "dataReady" esemény)
 ---------------------------- */
 
-async function loadDashboard(uid) {
-  const app = document.getElementById("appView");
-  const skel = document.getElementById("skeletonScreen");
+document.addEventListener("dataReady", ({ detail }) => renderDashboard(detail));
+if (window.WT?.data) renderDashboard(window.WT.data);
 
-  // HARD LOCK: ensure skeleton visible, app hidden
-  if (app) app.style.display = "none";
-  if (skel) skel.style.display = "block";
-
-  const safe = async (fn, fallback = []) => {
-    try {
-      return await fn();
-    } catch (e) {
-      console.error(e);
-      return fallback;
-    }
-  };
-
-  /* ---------------------------
-     FIREBASE LOAD (WAIT HERE)
-  ---------------------------- */
-
-  const [clients, bookings, invoices] = await Promise.all([
-    safe(async () => {
-      const snap = await getDocs(
-        query(collection(db, "clients"), where("userId", "==", uid))
-      );
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }),
-
-    safe(async () => {
-      const snap = await getDocs(
-        query(collection(db, "bookings"), where("businessId", "==", uid))
-      );
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }),
-
-    safe(async () => {
-      const snap = await getDocs(
-        query(collection(db, "invoices"), where("userId", "==", uid))
-      );
-      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }),
-  ]);
-
-  /* ---------------------------
-     STATS
-  ---------------------------- */
-
+function renderDashboard({ clients = [], bookings = [], invoices = [] }) {
   const pendingInvoices = invoices.filter(i => i.status === "pending").length;
 
   const totalRevenue = invoices
@@ -112,10 +50,6 @@ async function loadDashboard(uid) {
   setEl("statBookings", bookings.length);
   setEl("statPending", pendingInvoices);
   setEl("statRevenue", formatFt(totalRevenue));
-
-  /* ---------------------------
-     FILTERS
-  ---------------------------- */
 
   const today = todayStr();
 
@@ -129,26 +63,9 @@ async function loadDashboard(uid) {
     )
     .slice(0, 6);
 
-  /* ---------------------------
-     RENDER UI (AFTER DATA READY)
-  ---------------------------- */
-
   renderTodayBookings(todayBk);
   renderUpcomingBookings(upcoming);
   renderRecentClients(clients.slice(-5).reverse());
-
-  /* ---------------------------
-     WAIT FOR DOM PAINT (CRITICAL)
-  ---------------------------- */
-
-  await new Promise(requestAnimationFrame);
-  await new Promise(requestAnimationFrame);
-
-  /* ---------------------------
-     SHOW APP + HIDE SKELETON
-  ---------------------------- */
-
-  revealApp();
 }
 
 /* ---------------------------
@@ -236,26 +153,6 @@ function renderRecentClients(list) {
       </div>
     </div>
   `).join("");
-}
-
-/* ---------------------------
-   REVEAL APP (FINAL SAFE VERSION)
----------------------------- */
-
-export function revealApp() {
-  const skel = document.getElementById("skeletonScreen");
-  const app = document.getElementById("appView");
-
-  if (!skel || !app) return;
-
-  app.style.display = "flex";
-  app.classList.add("fade-in");
-
-  skel.classList.add("fade-out");
-
-  setTimeout(() => {
-    skel.style.display = "none";
-  }, 250);
 }
 
 /* ---------------------------

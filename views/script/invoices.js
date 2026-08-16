@@ -1,8 +1,9 @@
 import { db } from "./firebase.js";
 import {
-  collection, addDoc, getDocs, updateDoc, deleteDoc,
-  doc, query, where, serverTimestamp
+  collection, addDoc, updateDoc, deleteDoc,
+  doc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { refreshCollection } from "./dataStore.js";
 
 let uid        = null;
 let allInvoices = [];
@@ -11,43 +12,29 @@ let allPlans    = [];
 let lineItems   = [];
 let activeFilter = "all";
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  uid = user.uid;
-  await Promise.all([loadInvoices(), loadClients(), loadPlans()]);
-  setupFilters();
-  window.revealApp();
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => __wtRun(detail));
+if (window.WT?.data) __wtRun(window.WT.data);
 
-};
+function __wtRun(data) {
+  uid = data.uid;
+  allInvoices = data.invoices || [];
+  allClients  = data.clients  || [];
+  allPlans    = data.plans    || [];
 
-/* ── Load ───────────────────────────────────────────── */
-async function loadInvoices() {
-  const snap = await getDocs(
-    query(collection(db, "invoices"), where("userId", "==", uid))
-  );
-  allInvoices = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   renderInvoices(filtered());
   renderStats();
-}
-
-async function loadClients() {
-  const snap = await getDocs(
-    query(collection(db, "clients"), where("userId", "==", uid))
-  );
-  allClients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   populateClientSelect();
+  populatePlanSelect();
+
+  setupFilters();
 }
 
-async function loadPlans() {
-  const snap = await getDocs(
-    query(collection(db, "plans"), where("userId", "==", uid))
-  );
-  allPlans = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  populatePlanSelect();
+/* ── Reload (CRUD után, cache-frissítéssel) ──────────── */
+async function reloadInvoices() {
+  allInvoices = await refreshCollection("invoices", uid);
+  renderInvoices(filtered());
+  renderStats();
 }
 
 function populatePlanSelect() {
@@ -215,7 +202,7 @@ window.saveInvoice = async function() {
       createdAt: serverTimestamp()
     });
     closeInvoiceModal();
-    await loadInvoices();
+    await reloadInvoices();
   } catch (err) {
     console.error(err);
     alert("Failed to save invoice.");
@@ -227,7 +214,7 @@ window.saveInvoice = async function() {
 window.markPaid = async function(id) {
   if (!confirm("Mark this invoice as paid?")) return;
   await updateDoc(doc(db, "invoices", id), { status: "paid" });
-  await loadInvoices();
+  await reloadInvoices();
 };
 
 /* ── Pay Terminal (POS) ─────────────────────────────── */
@@ -303,7 +290,7 @@ window.chargeTerminal = async function() {
     status.textContent = "Approved — " + formatFt(inv.total);
     btn.textContent = "Done";
     btn.disabled = false;
-    btn.onclick = () => { closeTerminal(); loadInvoices(); btn.onclick = chargeTerminal; };
+    btn.onclick = () => { closeTerminal(); reloadInvoices(); btn.onclick = chargeTerminal; };
   } catch (err) {
     console.error(err);
     status.className = "term-status declined";
@@ -342,7 +329,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 window.deleteInvoice = async function(id) {
   if (!confirm("Delete this invoice permanently?")) return;
   await deleteDoc(doc(db, "invoices", id));
-  await loadInvoices();
+  await reloadInvoices();
 };
 
 /* helpers */

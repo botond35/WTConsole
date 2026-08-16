@@ -1,37 +1,36 @@
 import { db } from "./firebase.js";
 import {
-  collection, addDoc, getDocs, updateDoc, deleteDoc,
-  doc, query, where, orderBy, serverTimestamp
+  collection, addDoc, updateDoc, deleteDoc,
+  doc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { refreshCollection } from "./dataStore.js";
 
 let uid     = null;
 let allMsgs = [];
 let selected = null;
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  uid = user.uid;
-  await loadMessages();
-  window.revealApp();
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => __wtRun(detail));
+if (window.WT?.data) __wtRun(window.WT.data);
 
-};
+function __wtRun(data) {
+  uid = data.uid;
+  allMsgs = sortMsgs(data.messages || []);
+  renderList();
+  updateUnreadBadge();
+}
 
-async function loadMessages() {
-  const snap = await getDocs(
-    query(collection(db, "messages"), where("userId", "==", uid))
-  );
-  allMsgs = snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .sort((a, b) => {
-      const ta = a.createdAt?.toDate?.() || new Date(0);
-      const tb = b.createdAt?.toDate?.() || new Date(0);
-      return tb - ta;
-    });
+function sortMsgs(list) {
+  return [...list].sort((a, b) => {
+    const ta = a.createdAt?.toDate?.() || new Date(0);
+    const tb = b.createdAt?.toDate?.() || new Date(0);
+    return tb - ta;
+  });
+}
 
+// Törlés/új jegyzet UTÁN hívjuk: friss adat a szerverről + cache frissítés.
+async function reloadMessages() {
+  allMsgs = sortMsgs(await refreshCollection("messages", uid));
   renderList();
   updateUnreadBadge();
 }
@@ -139,7 +138,7 @@ window.deleteMsg = async function(id) {
   await deleteDoc(doc(db, "messages", id));
   selected = null;
   renderDetail();
-  await loadMessages();
+  await reloadMessages();
 };
 
 /* ── Compose Note ─────────────────────────────────── */
@@ -173,7 +172,7 @@ window.saveNote = async function() {
       createdAt: serverTimestamp()
     });
     closeNoteModal();
-    await loadMessages();
+    await reloadMessages();
   } catch (err) {
     console.error(err);
   } finally {

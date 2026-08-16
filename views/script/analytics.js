@@ -1,34 +1,12 @@
-import { db } from "./firebase.js";
-import {
-  collection, getDocs, query, where
-} from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-
 let revenueChart = null;
 let servicesChart = null;
 let bookingsChart = null;
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  await loadAnalytics(user.uid);
-  window.revealApp();
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => renderAnalytics(detail));
+if (window.WT?.data) renderAnalytics(window.WT.data);
 
-};
-
-async function loadAnalytics(uid) {
-  const [clientsSnap, bookingsSnap, invoicesSnap] = await Promise.all([
-    getDocs(query(collection(db, "clients"),  where("userId",     "==", uid))),
-    getDocs(query(collection(db, "bookings"), where("businessId", "==", uid))),
-    getDocs(query(collection(db, "invoices"), where("userId",     "==", uid)))
-  ]);
-
-  const clients  = clientsSnap.docs.map(d  => d.data());
-  const bookings = bookingsSnap.docs.map(d => d.data());
-  const invoices = invoicesSnap.docs.map(d => d.data());
-
+function renderAnalytics({ clients = [], bookings = [], invoices = [] }) {
   // ── Top KPIs ─────────────────────────────────────
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const totalRev  = paidInvoices.reduce((s, i) => s + (i.total || 0), 0);

@@ -4,14 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard – WT Console</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/tailwind-built.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/settings.css">
 </head>
 <body class="bg-gray-50 font-sans">
 
-<!-- ═══════════════════ FULL-PAGE SKELETON ═══════════════════ -->
 <div id="skeletonScreen" class="fixed inset-0 z-50 flex overflow-hidden">
   <aside class="w-64 bg-white border-r border-gray-100 flex flex-col justify-between shadow-sm flex-shrink-0">
     <div>
@@ -41,9 +40,15 @@
   </aside>
 
   <main class="flex-1 overflow-auto bg-gray-50 p-8">
-    <div class="mb-7">
-      <div class="skel" style="width:260px;height:26px;margin-bottom:10px;"></div>
-      <div class="skel" style="width:180px;height:14px;"></div>
+    <div class="flex items-center justify-between mb-7">
+      <div>
+        <div class="skel" style="width:260px;height:26px;margin-bottom:10px;"></div>
+        <div class="skel" style="width:180px;height:14px;"></div>
+      </div>
+      <div aria-hidden="true" class="skel flex items-center gap-2 px-4 py-2.5 rounded-xl" style="width:82px;height:42px;">
+        <span class="skel" style="width:18px;height:18px;border-radius:4px;"></span>
+        <span class="skel" style="width:28px;height:13px;border-radius:4px"></span>
+      </div>
     </div>
 
     <div class="grid grid-cols-4 gap-4 mb-7">
@@ -149,10 +154,19 @@
   </aside>
 
   <main class="flex-1 overflow-auto bg-gray-50 p-8">
-
-    <div class="mb-7">
-      <h2 class="text-2xl font-semibold text-gray-900 tracking-tight" id="greeting">Loading…</h2>
-      <p class="text-sm text-gray-400 mt-1" id="dateDisplay"></p>
+    <div class="flex items-center justify-between mb-7">
+      <div>
+        <h2 class="text-2xl font-semibold text-gray-900 tracking-tight" id="greeting">Loading…</h2>
+        <p class="text-sm text-gray-400 mt-1" id="dateDisplay"></p>
+      </div>
+      <a
+        id="addBtn"
+        href="creat.html" target="_blank"
+        class="flex items-center gap-2 bg-black text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-gray-800 transition"
+      >
+        <span class="material-symbols-rounded text-[18px]">add</span>
+        Add
+    </a>
     </div>
 
     <div class="grid grid-cols-4 gap-4 mb-7">
@@ -232,6 +246,7 @@
   </main>
 </div>
 
+<script type="module" src="../script/i18n.js"></script>
 <script type="module" src="../script/homepage.js"></script>
 <script type="module" src="../script/home.js"></script>
 </body>

@@ -1,20 +1,27 @@
 import { db } from "./firebase.js";
 import {
-  collection, addDoc, getDocs, updateDoc, deleteDoc,
-  doc, query, where
+  collection, addDoc, updateDoc, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { refreshCollection } from "./dataStore.js";
 
 let uid = null;
+let allPlans = [];
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  uid = user.uid;
-  await loadPlans();
-};
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => __wtRun(detail));
+if (window.WT?.data) __wtRun(window.WT.data);
+
+function __wtRun(data) {
+  uid = data.uid;
+  allPlans = data.plans || [];
+  renderPlans(allPlans);
+}
+
+// Hozzáadás/törlés UTÁN hívjuk: friss adat a szerverről + cache frissítés.
+async function reloadPlans() {
+  allPlans = await refreshCollection("plans", uid);
+  renderPlans(allPlans);
+}
 
 /* ── Modal ─────────────────────────────────────────── */
 window.openModal = function() {
@@ -31,16 +38,11 @@ window.closeModal = function() {
   document.getElementById("planCategory").value = "checkup";
 };
 
-/* ── CRUD ───────────────────────────────────────────── */
-async function loadPlans() {
+/* ── RENDER ───────────────────────────────────────────── */
+function renderPlans(plans) {
   const container = document.getElementById("plansContainer");
-  container.innerHTML = `<div class="loading-pulse">Loading plans…</div>`;
 
-  const snap = await getDocs(
-    query(collection(db, "plans"), where("userId", "==", uid))
-  );
-
-  if (snap.empty) {
+  if (!plans.length) {
     container.innerHTML = `
       <div class="col-span-3 empty-plans">
         <span class="material-symbols-rounded" style="font-size:40px;color:#d1d5db;">folder_open</span>
@@ -50,9 +52,7 @@ async function loadPlans() {
     return;
   }
 
-  container.innerHTML = snap.docs.map(d => {
-    const p = d.data();
-    return `
+  container.innerHTML = plans.map(p => `
       <div class="plan-card">
         <div class="plan-card-top">
           <div>
@@ -61,7 +61,7 @@ async function loadPlans() {
             ${p.duration ? `<span class="plan-duration">⏱ ${p.duration}</span>` : ""}
             <p class="plan-desc">${p.desc || "No description provided."}</p>
           </div>
-          <button onclick="deletePlan('${d.id}')" class="plan-delete" title="Delete plan">
+          <button onclick="deletePlan('${p.id}')" class="plan-delete" title="Delete plan">
             <span class="material-symbols-rounded">delete</span>
           </button>
         </div>
@@ -69,10 +69,11 @@ async function loadPlans() {
           <span class="plan-price">${p.price ? Number(p.price).toLocaleString("hu-HU") + " Ft" : "Price on request"}</span>
           <span class="plan-session">per session</span>
         </div>
-      </div>`;
-  }).join("");
+      </div>`
+  ).join("");
 }
 
+/* ── CRUD ───────────────────────────────────────────── */
 window.addPlan = async function() {
   const name     = document.getElementById("planName").value.trim();
   const desc     = document.getElementById("planDesc").value.trim();
@@ -91,7 +92,7 @@ window.addPlan = async function() {
       name, desc, price: parseFloat(price) || null, duration, category
     });
     closeModal();
-    await loadPlans();
+    await reloadPlans();
   } catch (err) {
     console.error(err);
     alert("Failed to add plan.");
@@ -104,7 +105,7 @@ window.deletePlan = async function(id) {
   if (!confirm("Delete this service plan?")) return;
   try {
     await deleteDoc(doc(db, "plans", id));
-    await loadPlans();
+    await reloadPlans();
   } catch (err) {
     console.error(err);
     alert("Could not delete plan.");
@@ -124,50 +125,4 @@ function categoryLabel(c) {
     other:    "Other"
   };
   return map[c] || "Other";
-}
-async function loadDashboard(uid) {
-  const safe = async (fn, fallback = []) => {
-    try { return await fn(); } catch (e) { console.error(e); return fallback; }
-  };
-
-  const [clients, bookings, invoices] = await Promise.all([
-    safe(async () => (await getDocs(query(collection(db, "clients"),  where("userId",     "==", uid))))
-      .docs.map(d => ({ id: d.id, ...d.data() }))),
-    safe(async () => (await getDocs(query(collection(db, "bookings"), where("businessId", "==", uid))))
-      .docs.map(d => ({ id: d.id, ...d.data() }))),
-    safe(async () => (await getDocs(query(collection(db, "invoices"), where("userId",     "==", uid))))
-      .docs.map(d => ({ id: d.id, ...d.data() }))),
-  ]);
-
-  const pendingInvoices = invoices.filter(i => i.status === "pending").length;
-  const totalRevenue    = invoices
-    .filter(i => i.status === "paid")
-    .reduce((s, i) => s + (parseFloat(i.total) || 0), 0);
-
-  setEl("statClients",  clients.length);
-  setEl("statBookings", bookings.length);
-  setEl("statPending",  pendingInvoices);
-  setEl("statRevenue",  formatFt(totalRevenue));
-
-  const today    = todayStr();
-  const todayBk  = bookings.filter(b => b.date === today);
-  const upcoming = bookings
-    .filter(b => b.date && b.date > today && b.status !== "cancelled")
-    .sort((a, b) => (a.date || "").localeCompare(b.date || "") ||
-                    (a.time || "").localeCompare(b.time || ""))
-    .slice(0, 6);
-
-  renderTodayBookings(todayBk);
-  renderUpcomingBookings(upcoming);
-  renderRecentClients(clients.slice(-5).reverse());
-
-  revealApp();
-}
-
-function revealApp() {
-  const skel = document.getElementById("skeletonScreen");
-  const app  = document.getElementById("appView");
-  if (skel) skel.classList.add("fade-out");
-  if (app)  app.classList.add("fade-in");
-  setTimeout(() => { if (skel) skel.style.display = "none"; }, 250);
 }

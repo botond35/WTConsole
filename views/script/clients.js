@@ -1,30 +1,28 @@
 import { db } from "./firebase.js";
 import {
-  collection, addDoc, getDocs, updateDoc, deleteDoc,
-  doc, query, where, serverTimestamp, orderBy
+  collection, addDoc, updateDoc, deleteDoc,
+  doc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { refreshCollection } from "./dataStore.js";
 
 let uid      = null;
 let allClients = [];
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  uid = user.uid;
-  await loadClients();
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => __wtRun(detail));
+if (window.WT?.data) __wtRun(window.WT.data);
+
+function __wtRun(data) {
+  uid = data.uid;
+  allClients = data.clients || [];
+  renderClients(allClients);
+  document.getElementById("clientCount").textContent = allClients.length;
   setupSearch();
-  window.revealApp();
+}
 
-};
-
-async function loadClients() {
-  const snap = await getDocs(
-    query(collection(db, "clients"), where("userId", "==", uid))
-  );
-  allClients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+// Hozzáadás/szerkesztés/törlés UTÁN hívjuk: friss adat a szerverről + cache frissítés.
+async function reloadClients() {
+  allClients = await refreshCollection("clients", uid);
   renderClients(allClients);
   document.getElementById("clientCount").textContent = allClients.length;
 }
@@ -58,7 +56,7 @@ function renderClients(list) {
       <div class="cc-contact">${c.phone || ""}</div>
       <div class="cc-divider"></div>
       <div class="cc-pet">
-        <span class="cc-pet-icon">${speciesEmoji(c.species)}</span>
+        <span class="cc-pet-icon"><span class="material-symbols-rounded">pets</span></span>
         <div>
           <div class="cc-pet-name">${c.petName}</div>
           <div class="cc-pet-detail">${c.breed || "Mixed"} · ${c.age ? c.age + " yrs" : "—"} · ${c.weight ? c.weight + " kg" : "—"}</div>
@@ -159,7 +157,7 @@ window.saveClient = async function() {
       await addDoc(collection(db, "clients"), data);
     }
     closeClientModal();
-    await loadClients();
+    await reloadClients();
   } catch (err) {
     console.error(err);
     alert("Failed to save. Check console.");
@@ -173,7 +171,7 @@ window.deleteClient = async function(id) {
   if (!confirm("Delete this client? This action cannot be undone.")) return;
   try {
     await deleteDoc(doc(db, "clients", id));
-    await loadClients();
+    await reloadClients();
   } catch (err) {
     console.error(err);
     alert("Could not delete client.");
@@ -182,4 +180,3 @@ window.deleteClient = async function(id) {
 
 /* helpers */
 function initials(n) { return (n || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2); }
-function speciesEmoji(s) { return ({ dog: "Dog", cat: "Cat", bird: "Bird", rabbit: "Rabbit" }[s] || "Other"); }

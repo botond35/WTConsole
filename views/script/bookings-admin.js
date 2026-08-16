@@ -1,35 +1,34 @@
 import { db } from "./firebase.js";
 import {
-  collection, getDocs, updateDoc, deleteDoc, doc, query, where
+  collection, updateDoc, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { refreshCollection } from "./dataStore.js";
 
 let uid = null;
 let allBookings = [];
 let activeFilter = "all";
 
-const __wtRun = async (user) => {
-  try { await __wtMain(user); } catch (e) { console.error(e); }
-};
-document.addEventListener("userLoaded", ({ detail: user }) => __wtRun(user));
-if (window.currentUser?.uid) __wtRun(window.currentUser);
-const __wtMain = async (user) => {
-  uid = user.uid;
-  await loadBookings();
+// Az adatok már be vannak töltve (homepage.js), csak megjelenítjük őket.
+document.addEventListener("dataReady", ({ detail }) => __wtRun(detail));
+if (window.WT?.data) __wtRun(window.WT.data);
+
+function __wtRun(data) {
+  uid = data.uid;
+  allBookings = sortBookings(data.bookings || []);
+  render();
   setupFilters();
   setupSearch();
-  window.revealApp();
+}
 
-};
-
-async function loadBookings() {
-  const snap = await getDocs(
-    query(collection(db, "bookings"), where("businessId", "==", uid))
-  );
-  allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  // Sort newest first by date+time
-  allBookings.sort((a, b) =>
+function sortBookings(list) {
+  return [...list].sort((a, b) =>
     ((b.date || "") + (b.time || "")).localeCompare((a.date || "") + (a.time || ""))
   );
+}
+
+// Törlés/frissítés esetén (pl. ha külső oldalon módosult) friss adat + cache.
+async function reloadBookings() {
+  allBookings = sortBookings(await refreshCollection("bookings", uid));
   render();
 }
 
@@ -51,10 +50,18 @@ function setupSearch() {
 
 function currentList() {
   const term = (document.getElementById("searchInput")?.value || "").toLowerCase().trim();
-  const today = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const today = now.toISOString().slice(0, 10);
+  const nowTime = now.toTimeString().slice(0, 5); // "HH:MM"
+
   return allBookings.filter(b => {
     if (activeFilter === "today")    { if (b.date !== today) return false; }
-    if (activeFilter === "upcoming") { if (!(b.date > today) || b.status === "cancelled") return false; }
+    if (activeFilter === "upcoming") {
+      if (b.status === "cancelled") return false;
+      const isFutureDate = b.date > today;
+      const isTodayNotPassed = b.date === today && (b.time || "") >= nowTime;
+      if (!isFutureDate && !isTodayNotPassed) return false;
+    }
     if (activeFilter === "past")     { if (!(b.date < today)) return false; }
     if (activeFilter === "pending")  { if (b.status !== "pending") return false; }
     if (term) {
@@ -73,7 +80,13 @@ function render() {
   const today = new Date().toISOString().slice(0, 10);
   document.getElementById("statTotal").textContent    = allBookings.length;
   document.getElementById("statToday").textContent    = allBookings.filter(b => b.date === today).length;
-  document.getElementById("statUpcoming").textContent = allBookings.filter(b => b.date > today && b.status !== "cancelled").length;
+  document.getElementById("statUpcoming").textContent = allBookings.filter(b => {
+    if (b.status === "cancelled") return false;
+    const now = new Date();
+    const today = now.toISOString().slice(0, 10);
+    const nowTime = now.toTimeString().slice(0, 5);
+    return b.date > today || (b.date === today && (b.time || "") >= nowTime);
+  }).length;
   document.getElementById("statPending").textContent  = allBookings.filter(b => b.status === "pending").length;
 
   const grid  = document.getElementById("bookingsGrid");
