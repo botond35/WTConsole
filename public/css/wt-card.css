@@ -1,0 +1,223 @@
+/* ─────────────────────────────────────────────────────────────
+   WT unified service / plan card
+   Loaded on: plans.html, booking.html, editor.html (and any page
+   that renders a service). Guarantees the card looks IDENTICAL
+   everywhere: admin Plans page, public Booking page and the
+   website editor preview.
+   Load this file LAST so it wins over page-local styles.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --wt-card-bg: #ffffff;
+  --wt-card-border: #e8e8e3;
+  --wt-card-border-hover: #d0d0ca;
+  --wt-card-radius: 16px;
+  --wt-card-pad: 20px;
+  --wt-card-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+  --wt-card-shadow-hover: 0 8px 24px rgba(0, 0, 0, .08);
+  --wt-card-ink: #111111;
+  --wt-card-ink-2: #6b7280;
+  --wt-card-muted: #9ca3af;
+  --wt-card-accent: #111111;
+}
+
+/* ── Shell ─────────────────────────────────────────────────── */
+.plan-card,
+.service-card,
+.svc-card {
+  background: var(--wt-card-bg);
+  border: 1px solid var(--wt-card-border);
+  border-radius: var(--wt-card-radius);
+  padding: var(--wt-card-pad);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--wt-card-shadow);
+  transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease;
+}
+
+.plan-card:hover,
+.service-card:hover,
+.svc-card:hover {
+  border-color: var(--wt-card-border-hover);
+  box-shadow: var(--wt-card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.service-card.selected {
+  border-color: var(--wt-card-ink);
+  box-shadow: 0 0 0 1px var(--wt-card-ink), var(--wt-card-shadow-hover);
+}
+
+/* ── Icon chip (same size / radius everywhere) ─────────────── */
+.plan-icon-chip,
+.svc-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+
+.plan-icon-chip {
+  margin-bottom: 0;
+}
+
+.plan-icon-chip .material-symbols-rounded,
+.svc-icon .material-symbols-rounded {
+  font-size: 19px;
+}
+
+/* ── Text ──────────────────────────────────────────────────── */
+.plan-category,
+.svc-category {
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--wt-card-muted);
+}
+
+.plan-name,
+.svc-name {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--wt-card-ink);
+  margin: 4px 0 0;
+}
+
+.plan-duration,
+.svc-dur {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--wt-card-ink-2);
+  margin-top: 4px;
+}
+
+.plan-duration .material-symbols-rounded,
+.svc-dur .material-symbols-rounded {
+  font-size: 13px;
+}
+
+.plan-desc,
+.svc-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--wt-card-ink-2);
+  margin: 8px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.plan-info-btn,
+.svc-info-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--wt-card-muted);
+}
+
+.plan-info-btn .material-symbols-rounded,
+.svc-info-btn .material-symbols-rounded {
+  font-size: 14px;
+}
+
+.plan-info-btn:hover,
+.svc-info-btn:hover {
+  color: var(--wt-card-ink);
+}
+
+/* ── Price row ─────────────────────────────────────────────── */
+.plan-price-row,
+.svc-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--wt-card-border);
+}
+
+.svc-card .svc-price {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--wt-card-border);
+}
+
+.plan-price,
+.svc-price {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  color: var(--wt-card-ink);
+}
+
+.svc-card .svc-price {
+  color: var(--site-accent, var(--wt-card-ink));
+}
+
+.plan-session,
+.svc-session {
+  font-size: 12px;
+  color: var(--wt-card-muted);
+}
+
+.plan-delete {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--wt-card-muted);
+  padding: 4px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+.plan-delete:hover {
+  color: #dc2626;
+  background: rgba(220, 38, 38, .08);
+}
+
+/* ── Dark ──────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --wt-card-bg: #17171b;
+  --wt-card-border: #2a2a31;
+  --wt-card-border-hover: #3a3a43;
+  --wt-card-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+  --wt-card-shadow-hover: 0 10px 30px rgba(0, 0, 0, .55);
+  --wt-card-ink: #f3f4f6;
+  --wt-card-ink-2: #b6bcc6;
+  --wt-card-muted: #8b929e;
+}
+
+[data-theme="dark"] .plan-card,
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .svc-card {
+  background: var(--wt-card-bg) !important;
+  border-color: var(--wt-card-border) !important;
+  color: var(--wt-card-ink);
+}
+
+[data-theme="dark"] .plan-name,
+[data-theme="dark"] .svc-name,
+[data-theme="dark"] .plan-price,
+[data-theme="dark"] .svc-price {
+  color: var(--wt-card-ink) !important;
+}
+
+[data-theme="dark"] .plan-desc,
+[data-theme="dark"] .svc-desc {
+  color: var(--wt-card-ink-2) !important;
+}

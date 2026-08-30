@@ -1,0 +1,229 @@
+/* ─────────────────────────────────────────────────────────────
+   WT global dark theme
+   Activated by <html data-theme="dark"> (see script/wt-theme.js).
+   Covers every surface: Tailwind admin pages, the settings page,
+   the public booking page, the page creator and the editor.
+   ───────────────────────────────────────────────────────────── */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* palette */
+  --wt-bg: #0d0d10;
+  --wt-bg-2: #141418;
+  --wt-surface: #17171b;
+  --wt-surface-2: #1e1e24;
+  --wt-line: #2a2a31;
+  --wt-line-2: #35353e;
+  --wt-ink: #f4f5f7;
+  --wt-ink-2: #c3c8d1;
+  --wt-ink-3: #8b929e;
+  --wt-invert-bg: #f3f4f6;
+  --wt-invert-ink: #0d0d10;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+html[data-theme="dark"] body {
+  background: var(--wt-bg) !important;
+  color: var(--wt-ink) !important;
+}
+
+/* Design-system variables used by settings.css / booking.css / editor.css */
+html[data-theme="dark"] {
+  --bg: var(--wt-bg);
+  --bg-soft: var(--wt-bg-2);
+  --card: var(--wt-surface);
+  --surface: var(--wt-surface);
+  --border: var(--wt-line);
+  --border-strong: var(--wt-line-2);
+  --text: var(--wt-ink);
+  --text-primary: var(--wt-ink);
+  --text-secondary: var(--wt-ink-2);
+  --text-muted: var(--wt-ink-3);
+  --ink: var(--wt-ink);
+  --ink-soft: var(--wt-ink-2);
+  --muted: var(--wt-ink-3);
+  --bk-bg: var(--wt-bg);
+  --bk-card: var(--wt-surface);
+  --bk-border: var(--wt-line);
+  --bk-muted: var(--wt-ink-3);
+  --bk-ink: var(--wt-ink);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+  --shadow-md: 0 8px 26px rgba(0, 0, 0, .55);
+}
+
+/* ── Tailwind utility flips (admin pages) ──────────────────── */
+html[data-theme="dark"] .bg-gray-50,
+html[data-theme="dark"] .bg-gray-100,
+html[data-theme="dark"] .bg-slate-50 { background-color: var(--wt-bg) !important; }
+
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] aside,
+html[data-theme="dark"] main,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .section-card { background-color: var(--wt-bg-2) !important; }
+
+html[data-theme="dark"] .bg-gray-50.rounded-xl,
+html[data-theme="dark"] .hover\:bg-gray-100:hover,
+html[data-theme="dark"] .hover\:bg-gray-50:hover { background-color: var(--wt-surface-2) !important; }
+
+html[data-theme="dark"] .border-gray-50,
+html[data-theme="dark"] .border-gray-100,
+html[data-theme="dark"] .border-gray-200,
+html[data-theme="dark"] .border-gray-300,
+html[data-theme="dark"] .divide-gray-100 > * { border-color: var(--wt-line) !important; }
+
+html[data-theme="dark"] .text-black,
+html[data-theme="dark"] .text-gray-900,
+html[data-theme="dark"] .text-gray-800 { color: var(--wt-ink) !important; }
+html[data-theme="dark"] .text-gray-700,
+html[data-theme="dark"] .text-gray-600 { color: var(--wt-ink-2) !important; }
+html[data-theme="dark"] .text-gray-500,
+html[data-theme="dark"] .text-gray-400,
+html[data-theme="dark"] .text-gray-300 { color: var(--wt-ink-3) !important; }
+
+html[data-theme="dark"] .bg-black,
+html[data-theme="dark"] a.bg-black,
+html[data-theme="dark"] button.bg-black {
+  background-color: var(--wt-invert-bg) !important;
+  color: var(--wt-invert-ink) !important;
+}
+html[data-theme="dark"] .hover\:bg-gray-800:hover { background-color: #ffffff !important; }
+
+html[data-theme="dark"] .bg-blue-50 { background-color: rgba(59, 130, 246, .12) !important; }
+html[data-theme="dark"] .border-blue-100 { border-color: rgba(59, 130, 246, .28) !important; }
+html[data-theme="dark"] .text-blue-700,
+html[data-theme="dark"] .text-blue-600 { color: #93c5fd !important; }
+html[data-theme="dark"] .bg-green-50 { background-color: rgba(16, 185, 129, .12) !important; }
+html[data-theme="dark"] .text-green-700 { color: #6ee7b7 !important; }
+html[data-theme="dark"] .bg-red-50 { background-color: rgba(239, 68, 68, .12) !important; }
+html[data-theme="dark"] .text-red-700,
+html[data-theme="dark"] .text-red-600 { color: #fca5a5 !important; }
+html[data-theme="dark"] .bg-amber-50,
+html[data-theme="dark"] .bg-yellow-50 { background-color: rgba(245, 158, 11, .12) !important; }
+html[data-theme="dark"] .text-amber-700,
+html[data-theme="dark"] .text-yellow-700 { color: #fcd34d !important; }
+
+html[data-theme="dark"] .shadow,
+html[data-theme="dark"] .shadow-sm,
+html[data-theme="dark"] .shadow-md { box-shadow: 0 1px 2px rgba(0, 0, 0, .55) !important; }
+
+/* ── Forms ─────────────────────────────────────────────────── */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .field-input,
+html[data-theme="dark"] .ctrl-select,
+html[data-theme="dark"] .search-input {
+  background-color: var(--wt-surface-2) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line-2) !important;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder { color: var(--wt-ink-3) !important; }
+html[data-theme="dark"] option { background: var(--wt-surface-2); color: var(--wt-ink); }
+
+/* ── Panels, modals, tables ────────────────────────────────── */
+html[data-theme="dark"] .modal-box,
+html[data-theme="dark"] .modal,
+html[data-theme="dark"] .popover,
+html[data-theme="dark"] .dropdown,
+html[data-theme="dark"] .menu {
+  background: var(--wt-surface) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line) !important;
+}
+html[data-theme="dark"] .modal-overlay { background: rgba(0, 0, 0, .65) !important; }
+
+html[data-theme="dark"] table thead th { background: var(--wt-surface-2) !important; color: var(--wt-ink-2) !important; }
+html[data-theme="dark"] table td,
+html[data-theme="dark"] table th { border-color: var(--wt-line) !important; }
+html[data-theme="dark"] tbody tr:hover { background: var(--wt-surface-2) !important; }
+
+html[data-theme="dark"] .skel {
+  background: linear-gradient(90deg, #1b1b21 25%, #24242c 37%, #1b1b21 63%) !important;
+}
+
+/* ── Booking page (public) ─────────────────────────────────── */
+html[data-theme="dark"] .bk-wrap,
+html[data-theme="dark"] .bk-header,
+html[data-theme="dark"] .bk-card,
+html[data-theme="dark"] .step-panel,
+html[data-theme="dark"] .summary-card {
+  background: var(--wt-surface) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line) !important;
+}
+html[data-theme="dark"] .slot-btn,
+html[data-theme="dark"] .day-btn {
+  background: var(--wt-surface-2) !important;
+  border-color: var(--wt-line-2) !important;
+  color: var(--wt-ink) !important;
+}
+html[data-theme="dark"] .slot-btn.selected,
+html[data-theme="dark"] .day-btn.selected {
+  background: var(--wt-invert-bg) !important;
+  color: var(--wt-invert-ink) !important;
+}
+
+/* ── Page creator + editor chrome ──────────────────────────── */
+html[data-theme="dark"] .topbar,
+html[data-theme="dark"] .rail,
+html[data-theme="dark"] .creat-topbar,
+html[data-theme="dark"] .tpl-card,
+html[data-theme="dark"] .template-mini,
+html[data-theme="dark"] .block-item {
+  background: var(--wt-bg-2) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line) !important;
+}
+html[data-theme="dark"] .canvas-area { background: #08080a !important; }
+html[data-theme="dark"] .top-name,
+html[data-theme="dark"] .rail-label,
+html[data-theme="dark"] .template-mini-name { color: var(--wt-ink) !important; }
+html[data-theme="dark"] .top-sub,
+html[data-theme="dark"] .save-state,
+html[data-theme="dark"] .font-hint,
+html[data-theme="dark"] .template-mini-hint { color: var(--wt-ink-3) !important; }
+html[data-theme="dark"] .btn-ghost {
+  background: var(--wt-surface-2) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line-2) !important;
+}
+html[data-theme="dark"] .btn-dark {
+  background: var(--wt-invert-bg) !important;
+  color: var(--wt-invert-ink) !important;
+}
+html[data-theme="dark"] .device-switch { background: var(--wt-surface-2) !important; }
+html[data-theme="dark"] .device-btn { color: var(--wt-ink-3) !important; }
+html[data-theme="dark"] .device-btn.active {
+  background: var(--wt-surface) !important;
+  color: var(--wt-ink) !important;
+}
+
+/* The rendered website preview stays light on purpose — it is the
+   visitor-facing page, not app chrome. */
+html[data-theme="dark"] .device-frame { background: #ffffff !important; }
+
+/* ── Intro.js tour ─────────────────────────────────────────── */
+html[data-theme="dark"] .introjs-tooltip {
+  background: var(--wt-surface) !important;
+  color: var(--wt-ink) !important;
+  border: 1px solid var(--wt-line);
+}
+html[data-theme="dark"] .introjs-tooltiptext,
+html[data-theme="dark"] .introjs-tooltip-title { color: var(--wt-ink) !important; }
+html[data-theme="dark"] .introjs-arrow.top { border-bottom-color: var(--wt-surface) !important; }
+html[data-theme="dark"] .introjs-arrow.bottom { border-top-color: var(--wt-surface) !important; }
+html[data-theme="dark"] .introjs-arrow.left { border-right-color: var(--wt-surface) !important; }
+html[data-theme="dark"] .introjs-arrow.right { border-left-color: var(--wt-surface) !important; }
+html[data-theme="dark"] .introjs-button {
+  background: var(--wt-surface-2) !important;
+  color: var(--wt-ink) !important;
+  border-color: var(--wt-line-2) !important;
+  text-shadow: none !important;
+}
+html[data-theme="dark"] .introjs-helperLayer {
+  background: rgba(255, 255, 255, .06) !important;
+  box-shadow: 0 0 0 5000px rgba(0, 0, 0, .7) !important;
+}

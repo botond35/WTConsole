@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create – WT Console</title>
+  <link rel="stylesheet" href="../css/tailwind-built.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/settings.css">
+  <link rel="stylesheet" href="../css/creat.css">
+  <link rel="stylesheet" href="../css/wt-dark.css">
+  <script src="../script/wt-theme.js"></script>
+  <script src="../script/wt-domain.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+  <p class="eyebrow mono">Workspace setup</p>
+  <h1>What kind of business do you run?</h1>
+  <p class="sub">This sets the names, icons and quick actions you'll see across the console — clients, bookings, invoices, all tailored to fit. You can change it later in Settings.</p>
+
+  <div class="grid" id="grid" role="listbox" aria-label="Business type"></div>
+
+  <a href="editor.html" class="skip mono">Skip and use default labels →</a>
+</div>
+
+<div class="footer-bar" id="footerBar">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="icon-chip" id="footerIcon"></div>
+      <div class="footer-text">
+        <p class="name" id="footerName">—</p>
+        <p class="hint">You can change this anytime in Settings</p>
+      </div>
+    </div>
+    <button class="btn" id="continueBtn">
+      <span id="continueLabel">Create workspace</span>
+      <span class="material-symbols-rounded">arrow_forward</span>
+    </button>
+  </div>
+</div>
+
+<script src="../script/creat.js"></script>
+
+<script src="../script/wt-intro.js"></script>
+</body>
+</html>

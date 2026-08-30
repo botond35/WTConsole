@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oldalszerkesztő – WT Console</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/editor.css">
+  <link rel="stylesheet" href="../css/wt-dark.css">
+  <script src="../script/wt-theme.js"></script>
+  <script src="../script/wt-domain.js"></script>
+  <link rel="stylesheet" href="../css/wt-card.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="top-left">
+    <button class="back-btn" id="backBtn" title="Vissza a sablonokhoz">
+      <span class="material-symbols-rounded" style="font-size:18px;">arrow_back</span>
+    </button>
+    <div>
+      <div class="top-name" id="topName">Weboldal szerkesztése</div>
+      <div class="top-sub" id="topSub">—</div>
+    </div>
+  </div>
+
+  <div class="device-switch" role="group" aria-label="Előnézeti méret">
+    <button class="device-btn active" data-device="desktop" title="Asztali">
+      <span class="material-symbols-rounded">desktop_windows</span>
+    </button>
+    <button class="device-btn" data-device="tablet" title="Tablet">
+      <span class="material-symbols-rounded">tablet_mac</span>
+    </button>
+    <button class="device-btn" data-device="mobile" title="Telefon">
+      <span class="material-symbols-rounded">smartphone</span>
+    </button>
+  </div>
+
+  <div class="top-right">
+    <a class="domain-chip" id="wtDomainChip" href="settings.html" title="A weboldal címe (Beállítások → Az oldalad címe)">
+      <span class="material-symbols-rounded" style="font-size:15px;">public</span>
+      <span id="wtDomainChipText">Cím igénylése…</span>
+    </a>
+    <span class="save-state mono" id="saveState">Minden változás mentve</span>
+    <button class="btn btn-ghost" id="previewBtn">
+      <span class="material-symbols-rounded">open_in_new</span> Élő nézet
+    </button>
+    <button class="btn btn-dark" id="publishBtn">
+      <span class="material-symbols-rounded">bolt</span> Közzététel
+    </button>
+  </div>
+</div>
+
+<aside class="rail">
+  <div class="rail-section">
+    <div class="rail-label">Sablon</div>
+  </div>
+  <div class="template-mini" id="templateMini">
+    <div class="icon-chip" id="templateIcon"></div>
+    <div class="template-mini-text">
+      <div class="template-mini-name" id="templateName">—</div>
+      <div class="template-mini-hint">Sablon módosítása</div>
+    </div>
+  </div>
+
+  <div class="booking-status" id="bookingStatus">Foglalási link betöltése…</div>
+
+  <div class="rail-section" style="padding-top:0;">
+    <div class="rail-label">Blokkok</div>
+  </div>
+  <div style="padding:0 8px;" id="blockList"></div>
+
+  <div class="rail-divider"></div>
+
+  <div class="rail-section" style="padding-top:0;">
+    <div class="rail-label">Kiemelő szín</div>
+  </div>
+  <div class="swatch-row" id="swatchRow"></div>
+
+  <div class="rail-divider"></div>
+
+  <div class="rail-section" style="padding-top:0;">
+    <div class="rail-label">Betűtípus</div>
+  </div>
+  <div class="font-list" id="fontList"></div>
+  <p class="font-hint">Ez az alap betűtípus. Egy adott szöveg kijelölésekor felugró eszköztárral saját fontot és színt is beállíthatsz rá.</p>
+</aside>
+
+<div class="text-toolbar" id="textToolbar">
+  <select id="ttFontSelect"></select>
+  <div class="text-toolbar-sep"></div>
+  <div class="text-toolbar-colors" id="ttColors"></div>
+  <button class="tt-reset" id="ttReset" type="button" title="Visszaállítás alapértelmezettre">
+    <span class="material-symbols-rounded">format_clear</span>
+  </button>
+</div>
+
+<main class="canvas-area">
+  <div class="device-frame" id="deviceFrame">
+    <div class="site" id="site"></div>
+  </div>
+</main>
+
+<!-- Full-description popover for service cards — same pattern as the
+     Plans admin page and the public booking page. -->
+<div class="svc-popover" id="editorDescPopover">
+  <h4 id="editorDescPopoverTitle"></h4>
+  <p id="editorDescPopoverText"></p>
+</div>
+
+<!-- Image modal -->
+<div class="modal-overlay hidden" id="imgModal">
+  <div class="modal">
+    <h3>Kép cseréje</h3>
+    <p>Illessz be egy kép URL-t, vagy tölts fel egy fájlt a gépedről.</p>
+    <input type="text" id="imgUrlInput" placeholder="https://..." />
+    <div class="upload-row">
+      <label class="upload-btn">
+        Fájl feltöltése
+        <input type="file" accept="image/*" id="imgFileInput" style="display:none;">
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="imgCancel">Mégse</button>
+      <button class="btn btn-dark" id="imgApply">Alkalmaz</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="material-symbols-rounded">check_circle</span><span id="toastText">Elmentve</span></div>
+
+<script type="module" src="../script/editor.js"></script>
+<script src="../script/wt-intro.js"></script>
+</body>
+</html>
