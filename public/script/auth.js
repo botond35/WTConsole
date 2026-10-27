@@ -7,14 +7,14 @@ import {
   OAuthProvider
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import {
-  doc, setDoc
+  doc, setDoc, getDoc, updateDoc, collection, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 function showMessage(message, divId) {
   const el = document.getElementById(divId);
   if (!el) return;
   el.style.display = "block";
-  el.innerHTML = message;
+  el.textContent = message;
   setTimeout(() => { el.style.display = "none"; }, 5000);
 }
 
@@ -35,6 +35,25 @@ function cleanError(error) {
   return map[error.code] || error.message.replace(/^Firebase:\s*/, "").replace(/\s*\(auth\/.*\)\.?$/, "");
 }
 
+/* ── Invite link (?invite=CODE) ───────────────────── */
+const inviteCode = new URLSearchParams(location.search).get("invite");
+let invite = null;
+if (inviteCode) {
+  (async () => {
+    try {
+      const snap = await getDoc(doc(db, "invites", inviteCode));
+      if (snap.exists() && !snap.data().used) {
+        invite = snap.data();
+        window.WTWizard?.enterInviteMode(invite);
+      } else {
+        showMessage("This invite link is invalid or has already been used.", "signInMessage");
+      }
+    } catch (err) {
+      showMessage(cleanError(err), "signInMessage");
+    }
+  })();
+}
+
 /* ── Sign Up ──────────────────────────────────────── */
 const signUp = document.getElementById("submitSignUp");
 if (signUp) {
@@ -45,18 +64,59 @@ if (signUp) {
     const phone    = document.getElementById("phone").value.trim();
     const email    = document.getElementById("rEmail").value.trim();
     const password = document.getElementById("rPassword").value;
+    const teamSize = parseInt(document.getElementById("teamNumber").value, 10) || 1;
 
     if (!fName || !lName || !business || !phone || !email || !password) {
-      showMessage("Please fill in all fields.", "signUpMessage"); return;
+      showMessage("Please fill in all required fields.", "signUpMessage"); return;
+    }
+    if (password.length < 6) {
+      showMessage("Password must be at least 6 characters.", "signUpMessage"); return;
     }
 
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, "users", cred.user.uid), {
-        firstName: fName, lastName: lName,
-        Business: business, Phone: phone, email
-      });
-      localStorage.setItem("loggedInUserId", cred.user.uid);
+      const uid = cred.user.uid;
+
+      if (invite) {
+        /* Teammate joining through a link */
+        await setDoc(doc(db, "users", uid), {
+          firstName: fName, lastName: lName, Business: invite.business || business,
+          Phone: phone, email, teamId: invite.teamId, role: invite.role || "member",
+          inviteCode
+        });
+        await updateDoc(doc(db, "invites", inviteCode), { used: true, usedBy: uid });
+        await updateDoc(doc(db, "teams", invite.teamId, "members", invite.memberId), {
+          status: "joined", uid
+        });
+      } else {
+        /* Owner: account + team + teammates (manual or invited) in one batch */
+        const batch = writeBatch(db);
+        batch.set(doc(db, "users", uid), {
+          firstName: fName, lastName: lName, Business: business, Phone: phone, email,
+          teamId: uid, role: "owner", teamSize
+        });
+        batch.set(doc(db, "teams", uid), { ownerId: uid, business });
+
+        const members = window.WTWizard ? window.WTWizard.getMembers() : [];
+        members.forEach((m) => {
+          const ref = doc(collection(db, "teams", uid, "members"));
+          const invited = m.method === "link";
+          batch.set(ref, {
+            name: m.name, email: m.email, role: m.role,
+            status: invited ? "invited" : "listed",
+            inviteCode: invited ? m.code : null
+          });
+          if (invited) {
+            batch.set(doc(db, "invites", m.code), {
+              teamId: uid, memberId: ref.id, name: m.name, email: m.email,
+              role: m.role, business, used: false
+            });
+          }
+        });
+        await batch.commit();
+      }
+
+      localStorage.setItem("loggedInUserId", uid);
       showMessage("Registration successful! Redirecting…", "signUpMessage");
       setTimeout(() => { window.location.href = "home.html"; }, 1000);
     } catch (err) {
@@ -91,14 +151,13 @@ if (googleBtn) {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
       localStorage.setItem("loggedInUserId", result.user.uid);
 
-      // Create user doc if first login
-      const { getDoc, setDoc, doc: fsDoc } = await import("https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js");
-      const snap = await getDoc(fsDoc(db, "users", result.user.uid));
+      const snap = await getDoc(doc(db, "users", result.user.uid));
       if (!snap.exists()) {
         const names = (result.user.displayName || "Google User").split(" ");
-        await setDoc(fsDoc(db, "users", result.user.uid), {
+        await setDoc(doc(db, "users", result.user.uid), {
           firstName: names[0] || "", lastName: names.slice(1).join(" ") || "",
-          Business: "", Phone: "", email: result.user.email
+          Business: "", Phone: "", email: result.user.email,
+          teamId: result.user.uid, role: "owner"
         });
       }
       window.location.href = "home.html";

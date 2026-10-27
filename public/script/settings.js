@@ -27,25 +27,6 @@ document.addEventListener("userLoaded", ({ detail: user }) => {
 document.addEventListener("DOMContentLoaded", () => {
 
   // -------------------------------
-  // Dark Mode
-  // -------------------------------
-  const toggle = document.getElementById("darkToggle");
-
-  if (toggle) {
-    toggle.checked = window.WTTheme ? window.WTTheme.isDark()
-                                    : localStorage.getItem("darkMode") === "true";
-
-    toggle.addEventListener("change", () => {
-      if (window.WTTheme) window.WTTheme.set(toggle.checked);
-      else {
-        document.documentElement.setAttribute("data-theme", toggle.checked ? "dark" : "light");
-        if (toggle.checked) localStorage.setItem("darkMode", "true");
-        else localStorage.removeItem("darkMode");
-      }
-    });
-  }
-
-  // -------------------------------
   // Upload Button
   // -------------------------------
   const uploadBtn = document.getElementById("uploadPhotoBtn");

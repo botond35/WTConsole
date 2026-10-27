@@ -8,18 +8,6 @@ function setEl(id, value) {
   const el = document.getElementById(id);
   if (el) el.innerText = value ?? "";
 }
-
-/* ── Theme (dark mode) ──────────────────────────────
-   Applied as early as possible to avoid flash and on every page. */
-function applyTheme() {
-  const dark = localStorage.getItem("darkMode") === "true";
-  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-}
-applyTheme();
-
-// Dark-mode styling now lives in css/wt-dark.css and is bootstrapped by
-// script/wt-theme.js (loaded in <head> of every page).
-
 /* Sticky userLoaded: cache the user on window so listeners attached AFTER
    onAuthStateChanged fires still get a chance to react. */
 window.whenUserLoaded = function (cb) {
@@ -58,10 +46,6 @@ function injectLoaderStyles() {
     #wtTipBox .material-symbols-rounded { font-size: 16px; color: #111; flex-shrink: 0; }
     #wtTipText { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #wtTipBox.wt-tip-fade { opacity: 0; }
-    [data-theme="dark"] #wtTipBox { background:#141418; border-color:#26262c; color:#e5e7eb; }
-    [data-theme="dark"] #wtTipBox .material-symbols-rounded { color:#e5e7eb; }
-    [data-theme="dark"] #wtProgressTrack { background: rgba(255,255,255,.08); }
-    [data-theme="dark"] #wtProgressFill { background:#f3f4f6; }
   `;
   const style = document.createElement("style");
   style.id = "wt-loader-style";
@@ -202,7 +186,11 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+/* ════════════════════════════════════════════════════════════
+   DOM READY – logout, delete-account modal
+════════════════════════════════════════════════════════════ */
 document.addEventListener("DOMContentLoaded", () => {
+  /* ── Logout ────────────────────────────────────────────── */
   const btn = document.getElementById("logout");
   if (btn) {
     btn.addEventListener("click", async () => {
@@ -212,25 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "index.html";
     });
   }
-});
 
-function generatePassword(length = 8) {
-  const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-  const values = new Uint32Array(length);
-  crypto.getRandomValues(values);
-
-  let result = "";
-
-  for (let i = 0; i < length; i++) {
-    result += charset[values[i] % charset.length];
-  }
-
-  return result;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
+  /* ── Delete-account modal (csak settings.html-en) ──────── */
   const deleteBtn = document.getElementById("delete");
   const modal = document.getElementById("deleteModal");
   const codeElement = document.getElementById("confirmationCode");
@@ -288,3 +259,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "Escape") closeModal();
   });
 });
+
+function generatePassword(length = 8) {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+  const values = new Uint32Array(length);
+  crypto.getRandomValues(values);
+
+  let result = "";
+
+  for (let i = 0; i < length; i++) {
+    result += charset[values[i] % charset.length];
+  }
+
+  return result;
+}
