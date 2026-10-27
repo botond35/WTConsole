@@ -128,7 +128,8 @@ if (signUp) {
 /* ── Sign In ──────────────────────────────────────── */
 const signIn = document.getElementById("submitSignIn");
 if (signIn) {
-  signIn.addEventListener("click", async () => {
+  const handleSignIn = async (event) => {
+    event.preventDefault();
     const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     if (!email || !password) { showMessage("Enter your email and password.", "signInMessage"); return; }
@@ -140,7 +141,10 @@ if (signIn) {
     } catch (err) {
       showMessage(cleanError(err), "signInMessage");
     }
-  });
+  };
+  const signInForm = signIn.closest("form");
+  if (signInForm) signInForm.addEventListener("submit", handleSignIn);
+  else signIn.addEventListener("click", handleSignIn);
 }
 
 /* ── Google ──────────────────────────────────────── */
