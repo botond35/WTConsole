@@ -20,6 +20,8 @@
         d.hidden = i < 0;
         d.classList.toggle("current", i === pos);
         d.classList.toggle("done", i >= 0 && i < pos);
+        if (i === pos) d.setAttribute("aria-current", "step");
+        else d.removeAttribute("aria-current");
         d.querySelector("span").textContent = i >= 0 && i < pos ? "✓" : i + 1;
       });
       back.style.visibility = pos ? "visible" : "hidden";
@@ -81,7 +83,7 @@
       el.dataset.method = "manual";
       el.innerHTML =
         '<div class="member-top"><span class="member-n"></span>' +
-        '<button type="button" class="icon-btn rm" aria-label="Remove teammate"><i class="fas fa-xmark"></i></button></div>' +
+        '<button type="button" class="icon-btn rm" aria-label="Remove teammate">&times;</button></div>' +
         '<div class="row">' +
         '<div class="input-group"><i class="fas fa-user"></i><input type="text" class="m-name" placeholder="Name" aria-label="Teammate name" required><label>Name</label></div>' +
         '<div class="input-group"><i class="fas fa-envelope"></i><input type="email" class="m-email" placeholder="Email" aria-label="Teammate email"><label>Email</label></div>' +
@@ -137,7 +139,8 @@
       enterInviteMode(inv) {
         order = [1, 4];
         pos = 0;
-        $("signIn").style.display = "none";
+        const socialSignIn = $("signIn");
+        if (socialSignIn) socialSignIn.style.display = "none";
         root.style.display = "block";
         $("signupTitle").textContent = "Join your team";
         const b = $("inviteBanner");

@@ -172,26 +172,26 @@
     </a>
     </div>
 
-    <div class="grid grid-cols-4 gap-4 mb-7">
-      <div class="stat-card">
+    <div class="grid grid-cols-4 gap-4 mb-7" data-dashboard-stats>
+      <div class="stat-card" data-console-view="clinic,walking,grooming,shelter">
         <div class="stat-icon" style="background:#f0f4ff;">
           <span class="material-symbols-rounded text-[20px]">pets</span>
         </div>
         <div><div class="stat-val" id="statClients">0</div><div class="stat-lbl">Total Clients</div></div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-console-view="clinic,walking,grooming,shelter">
         <div class="stat-icon" style="background:#f0fdf4;">
           <span class="material-symbols-rounded text-[20px]">event</span>
         </div>
         <div><div class="stat-val" id="statBookings">0</div><div class="stat-lbl">Bookings</div></div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-console-view="cashier">
         <div class="stat-icon" style="background:#fffbeb;">
           <span class="material-symbols-rounded text-[20px]">receipt_long</span>
         </div>
         <div><div class="stat-val" id="statPending">0</div><div class="stat-lbl">Pending Invoices</div></div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card" data-console-view="cashier">
         <div class="stat-icon" style="background:#fdf4ff;">
           <span class="material-symbols-rounded text-[20px]">payments</span>
         </div>
@@ -201,7 +201,7 @@
 
     <div class="grid gap-5" style="grid-template-columns:3fr 2fr;">
       <div class="space-y-5">
-        <div class="section-card">
+        <div class="section-card" data-console-view="clinic,walking,grooming,shelter">
           <div class="sc-header">
             <span class="sc-title">Today's Schedule</span>
             <a href="bookings.html" class="sc-link">Manage bookings →</a>
@@ -209,7 +209,7 @@
           <div id="todayBookings"><div class="empty-msg">No appointments scheduled for today</div></div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" data-console-view="clinic,walking,grooming,shelter">
           <div class="sc-header">
             <span class="sc-title">Upcoming Appointments</span>
           </div>
@@ -218,7 +218,7 @@
       </div>
 
       <div class="space-y-5">
-        <div class="section-card">
+        <div class="section-card" data-console-view="clinic,walking,grooming,shelter">
           <div class="sc-header">
             <span class="sc-title">Recent Clients</span>
             <a href="clients.html" class="sc-link">All →</a>
@@ -226,16 +226,16 @@
           <div id="recentClients"><div class="empty-msg">No clients yet.</div></div>
         </div>
 
-        <div class="section-card">
+        <div class="section-card" data-console-view="clinic,cashier,walking,grooming,shelter">
           <div class="sc-header"><span class="sc-title">Quick Actions</span></div>
           <div class="p-3 space-y-1.5">
-            <a href="clients.html" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
+            <a href="clients.html" data-console-view="clinic,walking,grooming,shelter" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
               <span class="material-symbols-rounded text-[18px] text-gray-400">person_add</span>Add New Client
             </a>
-            <a href="plans.html" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
+            <a href="plans.html" data-console-view="clinic,walking,grooming" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
               <span class="material-symbols-rounded text-[18px] text-gray-400">add_circle</span>Create Service Plan
             </a>
-            <a href="invoices.html" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
+            <a href="invoices.html" data-console-view="cashier" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
               <span class="material-symbols-rounded text-[18px] text-gray-400">receipt_long</span>New Invoice
             </a>
             <a href="../html/booking.html" target="_blank" class="flex items-center gap-3 p-2.5 rounded-lg hover:bg-gray-50 text-sm text-gray-700 border border-gray-100 transition">
@@ -253,5 +253,6 @@
 <script type="module" src="../script/homepage.js"></script>
 <script type="module" src="../script/home.js"></script>
 <script src="../script/wt-intro.js"></script>
+<script src="../script/wt-workspace.js"></script>
 </body>
 </html>

@@ -119,7 +119,7 @@ window.revealApp = function (instant) {
 ════════════════════════════════════════════════════════════ */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "index.html";
+    window.location.href = "login.html";
     return;
   }
 
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearCache();
       await signOut(auth);
       localStorage.removeItem("loggedInUserId");
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     });
   }
 

@@ -667,6 +667,46 @@ body {
   border-color: var(--border-hover);
 }
 
+.workspace-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  padding: 16px 20px;
+}
+
+.workspace-options label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px;
+  color: var(--text-primary);
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.workspace-options input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--success);
+}
+
+.workspace-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px 16px;
+}
+
+#consoleViewsStatus {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
 
 /* ── Modal Overlay ─────────────────────────────────────────────── */
 

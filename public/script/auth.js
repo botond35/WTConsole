@@ -10,9 +10,10 @@ import {
   doc, setDoc, getDoc, updateDoc, collection, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-function showMessage(message, divId) {
+function showMessage(message, divId, isSuccess = false) {
   const el = document.getElementById(divId);
   if (!el) return;
+  el.classList.toggle("message-success", isSuccess);
   el.style.display = "block";
   el.textContent = message;
   setTimeout(() => { el.style.display = "none"; }, 5000);
@@ -117,7 +118,7 @@ if (signUp) {
       }
 
       localStorage.setItem("loggedInUserId", uid);
-      showMessage("Registration successful! Redirecting…", "signUpMessage");
+      showMessage("Registration successful! Redirecting…", "signUpMessage", true);
       setTimeout(() => { window.location.href = "home.html"; }, 1000);
     } catch (err) {
       showMessage(cleanError(err), "signUpMessage");
@@ -128,7 +129,8 @@ if (signUp) {
 /* ── Sign In ──────────────────────────────────────── */
 const signIn = document.getElementById("submitSignIn");
 if (signIn) {
-  signIn.addEventListener("click", async () => {
+  const handleSignIn = async (event) => {
+    event.preventDefault();
     const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     if (!email || !password) { showMessage("Enter your email and password.", "signInMessage"); return; }
@@ -140,26 +142,42 @@ if (signIn) {
     } catch (err) {
       showMessage(cleanError(err), "signInMessage");
     }
-  });
+  };
+  const signInForm = signIn.closest("form");
+  if (signInForm) signInForm.addEventListener("submit", handleSignIn);
+  else signIn.addEventListener("click", handleSignIn);
 }
 
 /* ── Google ──────────────────────────────────────── */
+async function ensureSocialProfile(user) {
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  if (snap.exists()) return;
+
+  const [firstName = "", ...lastNames] = (user.displayName || "").trim().split(/\s+/);
+  const business = "";
+  const batch = writeBatch(db);
+  batch.set(userRef, {
+    firstName,
+    lastName: lastNames.join(" "),
+    Business: business,
+    Phone: "",
+    email: user.email || "",
+    teamId: user.uid,
+    role: "owner",
+    teamSize: 1
+  });
+  batch.set(doc(db, "teams", user.uid), { ownerId: user.uid, business });
+  await batch.commit();
+}
+
 const googleBtn = document.getElementById("googleLogin");
 if (googleBtn) {
   googleBtn.addEventListener("click", async () => {
     try {
       const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      await ensureSocialProfile(result.user);
       localStorage.setItem("loggedInUserId", result.user.uid);
-
-      const snap = await getDoc(doc(db, "users", result.user.uid));
-      if (!snap.exists()) {
-        const names = (result.user.displayName || "Google User").split(" ");
-        await setDoc(doc(db, "users", result.user.uid), {
-          firstName: names[0] || "", lastName: names.slice(1).join(" ") || "",
-          Business: "", Phone: "", email: result.user.email,
-          teamId: result.user.uid, role: "owner"
-        });
-      }
       window.location.href = "home.html";
     } catch (err) { showMessage(cleanError(err), "signInMessage"); }
   });
@@ -171,6 +189,7 @@ if (appleBtn) {
   appleBtn.addEventListener("click", async () => {
     try {
       const result = await signInWithPopup(auth, new OAuthProvider("apple.com"));
+      await ensureSocialProfile(result.user);
       localStorage.setItem("loggedInUserId", result.user.uid);
       window.location.href = "home.html";
     } catch (err) { showMessage(cleanError(err), "signInMessage"); }
