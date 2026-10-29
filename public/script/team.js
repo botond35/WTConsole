@@ -3,7 +3,7 @@ import {
   doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
-const LOGIN_PAGE = "index.html";
+const LOGIN_PAGE = "signup.html";
 const uid = localStorage.getItem("loggedInUserId");
 const card = document.getElementById("teamCard");
 

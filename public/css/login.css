@@ -143,6 +143,36 @@ form .button { margin-top: 12px; }
 
 .provider-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+.provider-button {
+    display: inline-flex;
+    min-width: 120px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 12px;
+    border: 1px solid #747775;
+    border-radius: 4px;
+    background: #fff;
+    color: #1f1f1f;
+    font: 500 14px/20px Roboto, Arial, sans-serif;
+    letter-spacing: .25px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.provider-button svg { flex: 0 0 auto; }
+.provider-google:hover { background: #f8f9fa; }
+
+.provider-apple {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.provider-apple:hover { background: #1a1a1a; }
+
 .message {
     margin: 0 0 18px;
     padding: 11px 13px;
@@ -153,6 +183,17 @@ form .button { margin-top: 12px; }
 }
 
 .message[hidden] { display: none; }
+.message-success { background: #eaf5e9; color: #245c42; }
+
+.signup-prompt {
+    margin: 22px 0 0;
+    color: var(--muted);
+    font-size: .9rem;
+    text-align: center;
+}
+
+.signup-prompt a { color: var(--green); font-weight: 700; }
+.signup-prompt a:hover { text-decoration: underline; }
 
 .back-link {
     display: block;
@@ -168,4 +209,5 @@ form .button { margin-top: 12px; }
 @media (max-width: 520px) {
     .login-shell { width: min(100% - 28px, 480px); padding-top: 22px; }
     .login-card { padding: 28px 22px; }
+    .provider-buttons { grid-template-columns: 1fr; }
 }

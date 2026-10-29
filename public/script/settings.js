@@ -11,6 +11,7 @@ let currentUser = null;
 // ===============================
 document.addEventListener("userLoaded", ({ detail: user }) => {
   currentUser = user;
+  loadConsoleViews(user);
 
   const preview = document.getElementById("profilePhotoPreview");
   if (user.photoUrl && preview) {
@@ -25,6 +26,7 @@ document.addEventListener("userLoaded", ({ detail: user }) => {
 // DOM READY
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("saveConsoleViews")?.addEventListener("click", saveConsoleViews);
 
   // -------------------------------
   // Upload Button
@@ -135,9 +137,54 @@ function applyBookingUrl(user) {
   if (openLink) openLink.href = bookingUrl.href;
 }
 
+const DEFAULT_CONSOLE_VIEWS = ["clinic", "cashier", "walking", "grooming", "shelter"];
+
 if (window.currentUser?.uid) {
   currentUser = window.currentUser;
+  loadConsoleViews(currentUser);
   applyBookingUrl(currentUser);
+}
+
+function loadConsoleViews(user) {
+  const selected = Array.isArray(user.consoleViews) && user.consoleViews.length
+    ? user.consoleViews
+    : DEFAULT_CONSOLE_VIEWS;
+  document.querySelectorAll('input[name="consoleView"]').forEach((input) => {
+    input.checked = selected.includes(input.value);
+  });
+}
+
+async function saveConsoleViews() {
+  if (!currentUser?.uid) {
+    alert("Your account is still loading. Please try again.");
+    return;
+  }
+
+  const selected = [...document.querySelectorAll('input[name="consoleView"]:checked')]
+    .map((input) => input.value);
+  if (!selected.length) {
+    alert("Choose at least one dashboard view.");
+    return;
+  }
+
+  const button = document.getElementById("saveConsoleViews");
+  const status = document.getElementById("consoleViewsStatus");
+  button.disabled = true;
+  status.textContent = "Saving…";
+
+  try {
+    await updateDoc(doc(db, "users", currentUser.uid), { consoleViews: selected });
+    currentUser = { ...currentUser, consoleViews: selected };
+    window.currentUser = currentUser;
+    document.dispatchEvent(new CustomEvent("consoleViewsChanged", { detail: selected }));
+    status.textContent = "Dashboard views saved.";
+  } catch (error) {
+    console.error("Could not save dashboard views:", error);
+    status.textContent = "Could not save your dashboard views.";
+    alert("Could not save dashboard views. Please try again.");
+  } finally {
+    button.disabled = false;
+  }
 }
 
 /* ─────────── Walktogether path claim: walktogether.com/<type>/<name> ─────────── */

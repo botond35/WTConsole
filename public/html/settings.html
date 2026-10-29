@@ -8,8 +8,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/settings.css">
+  <link rel="stylesheet" href="../css/wt-dark.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/team.css">
+  <script src="../script/wt-theme.js"></script>
   <script type="module" src="../script/team.js"></script>
   <script src="../script/wt-domain.js"></script>
 </head>
@@ -151,6 +153,37 @@
             </select>
           </div>
 
+          <div class="setting-row">
+            <div class="row-info">
+              <div class="row-title">Dark mode</div>
+              <div class="row-desc">Use a darker color theme across the console on this device</div>
+            </div>
+            <button class="copy-btn" id="themeToggle" type="button" aria-pressed="false">Dark mode off</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Dashboard views</div>
+        <div class="card">
+          <div class="setting-row">
+            <div class="row-info">
+              <div class="row-title">Choose the workspaces for this business</div>
+              <div class="row-desc">Combine the views that fit your business. You can change these choices later.</div>
+            </div>
+          </div>
+          <div class="workspace-options">
+            <label><input type="checkbox" name="consoleView" value="clinic"> Veterinary clinic</label>
+            <label><input type="checkbox" name="consoleView" value="cashier"> Cashier and payments</label>
+            <label><input type="checkbox" name="consoleView" value="walking"> Dog walking</label>
+            <label><input type="checkbox" name="consoleView" value="grooming"> Grooming and cosmetics</label>
+            <label><input type="checkbox" name="consoleView" value="shelter"> Animal shelter</label>
+          </div>
+          <div class="workspace-actions">
+            <span id="consoleViewsStatus" role="status" aria-live="polite"></span>
+            <button class="copy-btn" id="saveConsoleViews" type="button">Save dashboard views</button>
+          </div>
         </div>
       </div>
 
@@ -341,7 +374,6 @@
   
   <!-- Before </body> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="team.js"></script>
 
       <div class="section">
         <div class="section-label" data-i18n="section.profile">Profile</div>
@@ -457,6 +489,7 @@
 
 <script type="module" src="../script/homepage.js"></script>
 <script type="module" src="../script/settings.js"></script>
+<script src="../script/wt-workspace.js"></script>
 
 <script src="../script/wt-intro.js"></script>
 </body>

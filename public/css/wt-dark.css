@@ -1,0 +1,178 @@
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --white: #20241f;
+  --bg: #171a17;
+  --card: #20241f;
+  --border: #383e37;
+  --border-hover: #60685e;
+  --text-primary: #f0f2ed;
+  --text-secondary: #b7beb3;
+  --text-muted: #899187;
+  --accent: #dce5d8;
+  --accent-soft: #292e28;
+  --danger-soft: #402725;
+  --success-soft: #23382b;
+  --info-soft: #252e45;
+  --warn-soft: #3d3321;
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .bg-gray-50 {
+  background-color: #171a17 !important;
+  color: #f0f2ed;
+}
+
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] .bg-gray-100 {
+  background-color: #20241f !important;
+}
+
+html[data-theme="dark"] .bg-gray-50 {
+  background-color: #171a17 !important;
+}
+
+html[data-theme="dark"] .text-gray-900,
+html[data-theme="dark"] .text-gray-800,
+html[data-theme="dark"] .text-gray-700 {
+  color: #f0f2ed !important;
+}
+
+html[data-theme="dark"] .text-gray-600,
+html[data-theme="dark"] .text-gray-500,
+html[data-theme="dark"] .text-gray-400 {
+  color: #b7beb3 !important;
+}
+
+html[data-theme="dark"] .border-gray-100,
+html[data-theme="dark"] .border-gray-200 {
+  border-color: #383e37 !important;
+}
+
+html[data-theme="dark"] .section-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .client-card,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .modal-box,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .sidebar > div,
+html[data-theme="dark"] .sidebar-user,
+html[data-theme="dark"] .section-card .sc-header {
+  background-color: #20241f;
+  color: #f0f2ed;
+  border-color: #383e37;
+}
+
+html[data-theme="dark"] .stat-lbl,
+html[data-theme="dark"] .appt-sub,
+html[data-theme="dark"] .client-pet,
+html[data-theme="dark"] .cc-contact,
+html[data-theme="dark"] .inv-pet {
+  color: #b7beb3;
+}
+
+html[data-theme="dark"] .sc-title,
+html[data-theme="dark"] .stat-val,
+html[data-theme="dark"] .appt-name,
+html[data-theme="dark"] .client-name,
+html[data-theme="dark"] .cc-owner,
+html[data-theme="dark"] .inv-client,
+html[data-theme="dark"] .inv-cell {
+  color: #f0f2ed;
+}
+
+html[data-theme="dark"] .appt-date-tag,
+html[data-theme="dark"] .msg-item.unread {
+  background-color: #292e28;
+}
+
+html[data-theme="dark"] .msg-item:hover,
+html[data-theme="dark"] .inv-row:hover {
+  background-color: #292e28;
+}
+
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .field-input,
+html[data-theme="dark"] .field-select,
+html[data-theme="dark"] .field-textarea,
+html[data-theme="dark"] .ctrl-select,
+html[data-theme="dark"] .copy-btn,
+html[data-theme="dark"] .cancel-btn,
+html[data-theme="dark"] #confirmationInput {
+  background-color: #20241f;
+  color: #f0f2ed;
+  border-color: #383e37;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #899187;
+}
+
+html[data-theme="dark"] .nav-link:hover,
+html[data-theme="dark"] .setting-row:hover,
+html[data-theme="dark"] .copy-btn:hover,
+html[data-theme="dark"] .cancel-btn:hover {
+  background-color: #292e28;
+}
+
+html[data-theme="dark"] .client-row,
+html[data-theme="dark"] .appt-row,
+html[data-theme="dark"] .setting-row,
+html[data-theme="dark"] .profile-field,
+html[data-theme="dark"] .profile-hero,
+html[data-theme="dark"] .sidebar-brand,
+html[data-theme="dark"] .sidebar-footer {
+  border-color: #383e37;
+}
+
+html[data-theme="dark"] .cc-divider {
+  background-color: #383e37;
+}
+
+html[data-theme="dark"] .skel {
+  background: linear-gradient(90deg, #292e28 25%, #343a32 50%, #292e28 75%);
+}
+
+html[data-theme="dark"] .delete-modal-content {
+  background-color: #20241f;
+  color: #f0f2ed;
+}
+
+html[data-theme="dark"] .confirmation-code {
+  background-color: #292e28;
+  color: #f0f2ed;
+  border-color: #383e37;
+}
+
+html[data-theme="dark"] .field-input:focus,
+html[data-theme="dark"] .field-select:focus,
+html[data-theme="dark"] .field-textarea:focus,
+html[data-theme="dark"] .search-input:focus {
+  border-color: #84917e;
+}
+
+html[data-theme="dark"] .btn-add:hover {
+  background-color: #444a42;
+}
+
+html[data-theme="dark"] .btn-add,
+html[data-theme="dark"] .nav-link.active {
+  color: #171a17;
+  background-color: #dce5d8;
+}
+
+html[data-theme="dark"] .nav-link.active {
+  border-color: #dce5d8;
+}
+
+html[data-theme="dark"] .workspace-options label {
+  color: #f0f2ed;
+  background-color: #292e28;
+  border-color: #383e37;
+}
+
+[data-dashboard-stats] {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}

@@ -39,11 +39,10 @@
         .avatar { display: grid; width: 31px; height: 31px; margin-left: -7px; place-items: center; border: 2px solid var(--cream); border-radius: 50%; background: #e8c1a0; font-size: .76rem; }
         .avatar:nth-child(2) { background: #b6d2b9; }.avatar:nth-child(3) { background: #e7d28f; }.avatar:nth-child(4) { background: #c5b7d8; }
         .hero-art { position: relative; min-height: 425px; overflow: hidden; border-radius: 34px; background: #c9dfbf; }
+        .hero-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .hero-art::before { position: absolute; top: -90px; right: -70px; width: 340px; height: 340px; border: 1px solid rgba(25,55,46,.18); border-radius: 50%; content: ""; }
         .hero-art::after { position: absolute; right: 34px; bottom: -155px; width: 380px; height: 380px; border: 1px solid rgba(25,55,46,.2); border-radius: 50%; content: ""; }
         .sun { position: absolute; top: 52px; right: 62px; width: 78px; height: 78px; border-radius: 50%; background: #f5d774; }
-        .hill { position: absolute; right: -10%; bottom: -30%; width: 120%; height: 70%; border-radius: 50% 50% 0 0; background: #729a69; transform: rotate(-8deg); }
-        .hill-back { right: 24%; bottom: -25%; width: 95%; height: 66%; background: #94b783; transform: rotate(12deg); }
         .trail { position: absolute; z-index: 1; right: 22%; bottom: -5%; width: 150px; height: 300px; border: 15px solid #f6f0dc; border-right-color: transparent; border-bottom-color: transparent; border-radius: 50%; transform: rotate(28deg); }
         .art-label { position: absolute; z-index: 2; top: 25px; left: 25px; padding: 9px 14px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; background: rgba(255,255,255,.72); color: var(--ink); font-size: .8rem; font-weight: 700; backdrop-filter: blur(8px); }
         .section { padding: 76px 0; }
@@ -66,11 +65,9 @@
         .memories { padding-bottom: 90px; }
         .memory-grid { display: grid; grid-template-columns: 1.15fr .85fr .85fr; gap: 16px; }
         .memory-card { position: relative; display: flex; min-height: 230px; overflow: hidden; align-items: end; padding: 22px; border-radius: 20px; background: linear-gradient(145deg, #bed4aa, #6e956e); }
+        .memory-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .memory-card:nth-child(2) { background: linear-gradient(145deg, #e8cc9c, #b27b54); }
         .memory-card:nth-child(3) { background: linear-gradient(145deg, #b8d5d5, #618a82); }
-        .memory-card::before, .memory-card::after { position: absolute; border: 1px solid rgba(255,255,255,.36); border-radius: 50%; content: ""; }
-        .memory-card::before { top: -55px; right: -20px; width: 200px; height: 200px; }
-        .memory-card::after { top: 25px; right: 45px; width: 130px; height: 130px; }
         .memory-card span { position: relative; z-index: 1; color: white; font-size: 1rem; font-weight: 750; text-shadow: 0 1px 8px rgba(0,0,0,.2); }
         .cta { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 70px; padding: 40px 46px; border-radius: 24px; background: var(--ink); color: white; }
         .cta h2 { margin-bottom: 5px; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing: -.04em; }
