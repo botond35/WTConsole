@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your colleagues</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block" rel="stylesheet">
+<link rel="stylesheet" href="../css/upload.css">
+</head>
+<body>
+
+<nav class="vertical-nav" id="sideNav" aria-label="Main navigation">
+  <div class="nav-top">
+    <span class="nav-brand"><span class="ms" aria-hidden="true">groups</span><span class="nav-text">Team</span></span>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Collapse navigation" aria-expanded="true">
+      <span class="ms" aria-hidden="true">chevron_left</span>
+    </button>
+  </div>
+  <ul>
+    <li><a href="#calendar" data-tip="Home"><span class="ms" aria-hidden="true">home</span><span class="nav-text">Home</span></a></li>
+    <li><a href="#calendar" class="active" data-tip="Calendar"><span class="ms" aria-hidden="true">calendar_today</span><span class="nav-text">Calendar</span></a></li>
+    <li><a href="#catList" data-tip="Products"><span class="ms" aria-hidden="true">sell</span><span class="nav-text">Products</span></a></li>
+    <li><a href="../html/invoices.html" data-tip="Savings"><span class="ms" aria-hidden="true">Savings</span><span class="nav-text">Savings</span></a></li>
+    <li><a href="#people" data-tip="Social"><span class="ms" aria-hidden="true">group</span><span class="nav-text">Social</span></a></li>
+    <li><a href="#people" data-tip="Analytics"><span class="ms" aria-hidden="true">bar_chart</span><span class="nav-text">Analytics</span></a></li>
+    <li><a href="#people" data-tip="Settings"><span class="ms" aria-hidden="true">settings</span><span class="nav-text">Settings</span></a></li>
+  </ul>
+</nav>
+
+<main>
+  <h1 class="sr">Your colleagues</h1>
+
+  <section class="cal-app" id="calendar" aria-label="Calendar">
+    <aside>
+      <div class="panel">
+        <div class="mini-head">
+          <h3 id="miniTitle"></h3>
+          <div>
+            <button class="icon-btn blue" id="miniPrev" type="button" aria-label="Previous month"><span class="ms" aria-hidden="true">chevron_left</span></button>
+            <button class="icon-btn blue" id="miniNext" type="button" aria-label="Next month"><span class="ms" aria-hidden="true">chevron_right</span></button>
+          </div>
+        </div>
+        <div class="mini-grid" id="miniGrid"></div>
+      </div>
+      <div class="panel">
+        <h3 class="ph"><span class="ms" aria-hidden="true">sell</span>Categories</h3>
+        <ul class="cats" id="catList"></ul>
+        <button class="btn ghost add-link" id="addCat" type="button"><span class="ms" aria-hidden="true">add</span>New category</button>
+      </div>
+      <div class="panel">
+        <h3 class="ph"><span class="ms" aria-hidden="true">work_history</span>Work schedules</h3>
+        <ul class="cats" id="shiftList"></ul>
+      </div>
+    </aside>
+
+    <div>
+      <div class="week-head">
+        <button class="icon-btn" id="wkPrev" type="button" aria-label="Previous week"><span class="ms" aria-hidden="true">chevron_left</span></button>
+        <button class="icon-btn" id="wkNext" type="button" aria-label="Next week"><span class="ms" aria-hidden="true">chevron_right</span></button>
+        <h2 id="wkTitle"></h2>
+        <span class="badge" id="wkBadge"></span>
+        <button class="btn create" id="createEv" type="button"><span class="ms" aria-hidden="true">add</span>Create</button>
+      </div>
+      <div class="grid-card">
+        <div class="grid-scroll" id="gridScroll">
+          <div class="wk-inner">
+            <div class="wk-head" id="wkHead"></div>
+            <div class="wk-body" id="wkBody"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="team-head">
+    <h2 class="section">Your colleagues</h2>
+    <button class="btn" id="openAdd" type="button"><span class="ms" aria-hidden="true">person_add</span>Add colleague</button>
+  </div>
+  <div class="toolbar">
+    <div class="search"><span class="ms" aria-hidden="true">search</span><input id="search" type="search" placeholder="Search by name, role or department" aria-label="Search colleagues"></div>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="container" id="people"></div>
+
+  <footer><p>As an owner, you can manage your business like a game!</p></footer>
+</main>
+
+<!-- Event dialog -->
+<dialog id="evDlg">
+  <form id="evForm" autocomplete="off">
+    <div class="dlg-head">
+      <div><h2 id="evTitle">Create event</h2><p>Pick a category, a day and a time range.</p></div>
+      <button class="x" type="button" id="evClose" aria-label="Close"><span class="ms" aria-hidden="true">close</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="field full"><label for="e-title">Title *</label><input id="e-title" required></div>
+      <div class="field"><label for="e-cat">Category</label><select id="e-cat"></select></div>
+      <div class="field"><label for="e-date">Date *</label><input id="e-date" type="date" required></div>
+      <div class="field"><label for="e-start">Start *</label><input id="e-start" type="time" required></div>
+      <div class="field"><label for="e-end">End *</label><input id="e-end" type="time" required></div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost del" type="button" id="evDel"><span class="ms" aria-hidden="true">delete</span>Delete</button>
+      <button class="btn ghost" type="button" id="evCancel">Cancel</button>
+      <button class="btn" type="submit" id="evSave">Save event</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Category dialog -->
+<dialog id="catDlg">
+  <form id="catForm" autocomplete="off">
+    <div class="dlg-head">
+      <div><h2 id="catTitle">New category</h2><p>Name it and pick a colour.</p></div>
+      <button class="x" type="button" id="catClose" aria-label="Close"><span class="ms" aria-hidden="true">close</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="field full"><label for="c-name">Name *</label><input id="c-name" required maxlength="40"></div>
+      <div class="field full"><span class="lbl">Colour</span><div class="sw-row" id="swRow"></div></div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost del" type="button" id="catDel"><span class="ms" aria-hidden="true">delete</span>Delete</button>
+      <button class="btn ghost" type="button" id="catCancel">Cancel</button>
+      <button class="btn" type="submit">Save category</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Colleague dialog -->
+<dialog id="dlg">
+  <form id="colleagueForm" autocomplete="off">
+    <div class="dlg-head">
+      <div><h2 id="dlgTitle">Add colleague</h2><p>Fields marked with * are required.</p></div>
+      <button class="x" type="button" id="closeDlg" aria-label="Close"><span class="ms" aria-hidden="true">close</span></button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label for="f-name">Full name *</label><input id="f-name" required></div>
+      <div class="field"><label for="f-position">Position *</label><input id="f-position" required></div>
+      <div class="field"><label for="f-dept">Department</label><input id="f-dept" list="depts" placeholder="e.g. Sales"><datalist id="depts"><option>Sales</option><option>Marketing</option><option>Engineering</option><option>Finance</option><option>Operations</option><option>HR</option></datalist></div>
+      <div class="field"><label for="f-start">Start date</label><input id="f-start" type="date"></div>
+      <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="name@company.com"></div>
+      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" placeholder="+36 30 123 4567"></div>
+      <div class="field full"><label for="f-loc">Location</label><input id="f-loc" placeholder="City or office"></div>
+      <div class="field full"><label for="f-notes">Notes <small>(optional)</small></label><textarea id="f-notes" placeholder="Skills, responsibilities, anything worth remembering"></textarea></div>
+      <div class="field full">
+        <div class="sched-tools"><span class="lbl">Work schedule <small>(repeats every week)</small></span><button class="btn sm ghost" type="button" id="schedPreset">Mon–Fri 09:00–17:00</button></div>
+        <div class="sched-grid" id="schedGrid"></div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn ghost" type="button" id="cancelDlg">Cancel</button>
+      <button class="btn" type="submit" id="saveBtn">Add colleague</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="../script/upload.js"></script>
+</body>
+</html>
