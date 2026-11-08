@@ -146,7 +146,7 @@
     background:repeating-linear-gradient(135deg,var(--bgc) 0,var(--bgc) 6px,rgba(255,255,255,.6) 6px,rgba(255,255,255,.6) 12px);
     color:var(--fg2); font-size:.7rem; font-weight:600; padding:3px 6px; line-height:1.25; }
   .shift small { display:block; font-weight:500; font-size:.66rem; }
-  .sched-days { display:flex; gap:4px; margin:0 0 12px; }
+  .sched-days { display:flex; gap:4px; margin:0 0 12px; padding-bottom:14px; border-bottom:1px solid var(--line); }
   .sched-days span { width:26px; height:26px; border-radius:8px; display:grid; place-items:center; font-size:.72rem; font-weight:600; background:var(--subtle); color:var(--muted); }
   .sched-days span.on { background:var(--btn-bg); color:var(--btn-fg); }
   .sched-tools { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
@@ -174,7 +174,7 @@
   .role { margin:0; color:var(--muted); font-size:.92rem; }
   .tag { display:inline-block; margin-bottom:14px; padding:3px 10px; border-radius:999px; background:var(--subtle); font-size:.8rem; font-weight:500; align-self:flex-start; }
   .details { list-style:none; margin:0 0 16px; padding:14px 0 0; border-top:1px solid var(--line); display:grid; gap:8px; font-size:.9rem; }
-  .details li { display:grid; grid-template-columns:22px 1fr; gap:10px; align-items:start; }
+  .details[hidden] { display:none; }  .details li { display:grid; grid-template-columns:22px 1fr; gap:10px; align-items:start; }
   .details span.k { color:var(--muted); }
   .details a { color:inherit; text-underline-offset:3px; word-break:break-all; }
   .details .notes { white-space:pre-wrap; }
